@@ -1,0 +1,32 @@
+//
+//  Extensions.swift
+//  MarvelApp
+//
+//  Created by Laureen Schausberger on 12/11/2018.
+//  Copyright © 2018 Laureen Schausberger. All rights reserved.
+//
+
+import UIKit
+
+extension UIViewController {
+    
+    var topbarHeight: CGFloat {
+        return UIApplication.shared.statusBarFrame.size.height + (self.navigationController?.navigationBar.frame.height ?? 0.0)
+    }
+    
+}
+
+extension UILabel {
+    var optimalHeight : CGFloat {
+        get {
+            let label = UILabel(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: CGFloat.greatestFiniteMagnitude))
+            label.numberOfLines = 0
+            label.lineBreakMode = NSLineBreakMode.byWordWrapping
+            label.font = self.font
+            label.text = self.text
+            label.sizeToFit()
+            return label.frame.height
+        }
+        
+    }
+}
