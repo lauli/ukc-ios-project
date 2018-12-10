@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class DetailTableViewCell: UITableViewCell {
     
@@ -17,14 +18,11 @@ class DetailTableViewCell: UITableViewCell {
     @IBOutlet weak var showMoreButton: UIButton!
     
     var marvelType: Type = .characters
-    var marvelObject: MarvelObject? {
-        didSet {
-            updateInformationOnLabels()
-        }
-    }
+    var marvelObject: MarvelObject?
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        setupLayout()
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -33,7 +31,29 @@ class DetailTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    private func updateInformationOnLabels() {
+    private func setupLayout() {
+        
+        titleLabel.snp.makeConstraints { make in
+            make.left.equalTo(contentView).offset(20)
+        }
+        
+        amountLabel.snp.makeConstraints { make in
+            make.right.equalTo(contentView).inset(20)
+        }
+        
+        informationLabel.snp.makeConstraints { make in
+            make.left.equalTo(titleLabel)
+            make.right.equalTo(amountLabel)
+            make.top.equalTo(titleLabel).offset(50)
+        }
+        informationLabel.numberOfLines = 0
+        
+        showMoreButton.snp.makeConstraints { make in
+            make.top.equalTo(informationLabel.snp.bottom).offset(30)
+        }
+    }
+    
+    func updateInformationOnLabels() {
         
         switch marvelType {
         case .characters:
@@ -42,7 +62,7 @@ class DetailTableViewCell: UITableViewCell {
             }
             
             // set title and amount
-            titleLabel.text = "Comic"
+            titleLabel.text = "Number of Comics:"
             amountLabel.text = "\(details.amountOfComics ?? 0)"
             
             guard let information = details.comics else {

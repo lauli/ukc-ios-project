@@ -280,7 +280,7 @@ final class DataManager {
                 }
                 
             }
-            
+            completion(true)
             
         }
         

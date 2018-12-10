@@ -46,35 +46,10 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
                 print("CollectionViewController > Successfully downloaded \(self.marvelType.rawValue) Data.")
                 
                 DispatchQueue.main.async {
-//                    let numberOfVisibleCells = self.collectionView.visibleCells.count - 1
-//                    if numberOfVisibleCells <= 1 {
-//                        self.collectionView.reloadData()
-//                        return
-//                    }
-//
-//                    let end = numberOfVisibleCells + amountOfRetrievedObjects
-//                    var indexPaths = [IndexPath]()
-//
-//                    for i in numberOfVisibleCells..<end {
-//                        indexPaths.append(IndexPath(row: i, section: 0))
-//                    }
-//                    self.collectionView.insertItems(at: indexPaths)
-                    
-                    
-                    
                     if indexPaths != nil {
-//                        var indexP: [IndexPath] = indexPaths!
-//
-//                        while !indexP.isEmpty && amountOfRetrievedObjects < indexP.count {
-//                            _ = indexP.popLast()
-//                        }
-//                        // delete indexpaths that are not there (couldnt retrieve that many)
-//                        if !indexP.isEmpty {
-//                            self.collectionView.insertItems(at: indexP)
-//                        }
-                        
                         let indexPathsToReload = self.calculateIndexPathsToReload(byAmountsFetched: amountOfRetrievedObjects)
                         self.onFetchCompleted(with: indexPathsToReload)
+                        
                     } else {
                         self.collectionView.reloadData()
                     }
@@ -143,33 +118,14 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
         let height = UIScreen.main.bounds.height * 0.33
         return CGSize(width: width, height: height)
     }
-    
-//    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        let numberOfRemainingObjects: Int
-//
-//        switch marvelType {
-//        case .comics:
-//            numberOfRemainingObjects = dataManager.comics.count - indexPath.row
-//        case .characters:
-//            numberOfRemainingObjects = dataManager.characters.count - indexPath.row
-//        case .creators:
-//            numberOfRemainingObjects = dataManager.creators.count - indexPath.row
-//        }
-//
-//        if numberOfRemainingObjects < 4 {
-////            requestData(10)
-//        }
-//
-//    }
 
 }
 
 extension CollectionViewController {
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-        //        requestData(indexPaths.count, forCellsAtIndexPaths: indexPaths)
         if indexPaths.contains(where: isLoadingCell) {
-            requestData(10)
+            requestData(20)
         }
     }
     

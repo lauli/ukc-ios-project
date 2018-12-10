@@ -15,8 +15,7 @@ class DetailTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: "DetailComicsCell")
-
+        //self.tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: "DetailComicsCell")
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -25,6 +24,10 @@ class DetailTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 300.0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -45,6 +48,14 @@ class DetailTableViewController: UITableViewController {
         }
         
         return cell
+    }
+    
+    override func reloadInputViews() {
+        super.reloadInputViews()
+        
+        if let comicCell = self.tableView.cellForRow(at: IndexPath(item: 0, section: 0)) as? DetailTableViewCell {
+            comicCell.updateInformationOnLabels()
+        }
     }
 
 }

@@ -28,6 +28,8 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     
     private let dataManager = DataManager.shared
     
+    private var comicTableViewController: DetailTableViewController?
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -48,14 +50,28 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
                                                bottom: view.safeAreaInsets.bottom, right: 0)
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.destination {
+            
+        case let viewController as DetailTableViewController:
+            comicTableViewController = viewController
+            comicTableViewController?.marvelObject = marvelObject
+            comicTableViewController?.marvelType = marvelType
+            
+        default:
+            break
+        }
+    }
+    
     func requestDetails(forId id: Int, atIndex index: Int) {
-        
         switch marvelType {
         case .characters:
             dataManager.requestCharacter(forId: id, atIndex: index) { success in
                 if success {
                     print("CollectionViewController > Successfully requested Character Details.")
-                    self.tableViewContainer.reloadInputViews()
+                    DispatchQueue.main.async {
+                        self.comicTableViewController?.reloadInputViews()
+                    }
                 }
             }
             
