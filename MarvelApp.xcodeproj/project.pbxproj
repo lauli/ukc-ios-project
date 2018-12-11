@@ -27,6 +27,7 @@
 		9B4AC322219BA76200BFF6F9 /* MarvelCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4AC321219BA76200BFF6F9 /* MarvelCollectionViewCell.swift */; };
 		9B4AC324219BAD7C00BFF6F9 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4AC323219BAD7C00BFF6F9 /* PageViewController.swift */; };
 		9BB5E4A9219F15C200FB38D0 /* DetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5E4A8219F15C200FB38D0 /* DetailTableViewController.swift */; };
+		9BC50B7F21BF366500A42C0F /* DetailCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC50B7E21BF366500A42C0F /* DetailCollectionViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		9B4AC321219BA76200BFF6F9 /* MarvelCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelCollectionViewCell.swift; sourceTree = "<group>"; };
 		9B4AC323219BAD7C00BFF6F9 /* PageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
 		9BB5E4A8219F15C200FB38D0 /* DetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTableViewController.swift; sourceTree = "<group>"; };
+		9BC50B7E21BF366500A42C0F /* DetailCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCollectionViewController.swift; sourceTree = "<group>"; };
 		C0210BC7EFFEDE1A848E7BFA /* Pods-MarvelApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarvelApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MarvelApp/Pods-MarvelApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -151,6 +153,7 @@
 				9B4AC30A219AEDFD00BFF6F9 /* DetailViewController.swift */,
 				9BB5E4A8219F15C200FB38D0 /* DetailTableViewController.swift */,
 				9B2EBF95219F28B0005723DD /* DetailTableViewCell.swift */,
+				9BC50B7E21BF366500A42C0F /* DetailCollectionViewController.swift */,
 			);
 			path = DetailsView;
 			sourceTree = "<group>";
@@ -289,6 +292,7 @@
 				9B4AC324219BAD7C00BFF6F9 /* PageViewController.swift in Sources */,
 				9B4AC2FC2199200400BFF6F9 /* MarvelApp.xcdatamodeld in Sources */,
 				9B4AC317219B678100BFF6F9 /* Comic.swift in Sources */,
+				9BC50B7F21BF366500A42C0F /* DetailCollectionViewController.swift in Sources */,
 				9B4AC31E219B7C8900BFF6F9 /* MarvelObject.swift in Sources */,
 				9B4AC319219B6A7E00BFF6F9 /* Creator.swift in Sources */,
 				9BB5E4A9219F15C200FB38D0 /* DetailTableViewController.swift in Sources */,

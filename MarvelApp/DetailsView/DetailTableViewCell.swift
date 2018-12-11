@@ -53,9 +53,22 @@ class DetailTableViewCell: UITableViewCell {
         }
     }
     
-    func updateInformationOnLabels() {
+    func updateInformationOnLabels(byIndex index: Int = 0) {
         
         switch marvelType {
+        case .comics:
+            guard let comic = marvelObject as? Comic else {
+                return
+            }
+            
+            // set title and amount
+            titleLabel.text = "Character appearances:"
+            amountLabel.text = "\(comic.characterTotal ?? 0)"
+            
+            setupInformationLabel(for: comic.characters ?? [String]())
+            
+            
+            
         case .characters:
             guard let character = marvelObject as? Character, let details = character.details else {
                 return
@@ -65,21 +78,24 @@ class DetailTableViewCell: UITableViewCell {
             titleLabel.text = "Number of Comics:"
             amountLabel.text = "\(details.amountOfComics ?? 0)"
             
-            guard let information = details.comics else {
-                return
-            }
-            
-            // set information
-            informationLabel.text = (information.first ?? "") + ","
-            for comic in information {
-                informationLabel.text?.append(" \(comic),")
-            }
-            informationLabel.text?.append("...")
+            setupInformationLabel(for: details.comics ?? [String]())
             
         default:
             titleLabel.text = ""
         }
         
+    }
+    
+    private func setupInformationLabel(for array: [String]) {
+        if array.count == 0 {
+            return
+        }
+        
+        informationLabel.text = (array.first ?? "") + ","
+        for value in array {
+            informationLabel.text?.append(" \(value),")
+        }
+        informationLabel.text?.append("...")
     }
     
 }

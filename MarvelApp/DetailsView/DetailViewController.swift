@@ -28,7 +28,7 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     
     private let dataManager = DataManager.shared
     
-    private var comicTableViewController: DetailTableViewController?
+    private var detailTableTableViewController: DetailTableViewController?
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -54,9 +54,9 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         switch segue.destination {
             
         case let viewController as DetailTableViewController:
-            comicTableViewController = viewController
-            comicTableViewController?.marvelObject = marvelObject
-            comicTableViewController?.marvelType = marvelType
+            detailTableTableViewController = viewController
+            detailTableTableViewController?.marvelObject = marvelObject
+            detailTableTableViewController?.marvelType = marvelType
             
         default:
             break
@@ -65,12 +65,21 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     
     func requestDetails(forId id: Int, atIndex index: Int) {
         switch marvelType {
+        case .comics:
+            dataManager.requestComicDetails(forId: id, atIndex: index) { success in
+                if success {
+                    print("CollectionViewController > Successfully requested Comic Details.")
+                    DispatchQueue.main.async {
+                        self.detailTableTableViewController?.reloadInputViews()
+                    }
+                }
+            }
         case .characters:
-            dataManager.requestCharacter(forId: id, atIndex: index) { success in
+            dataManager.requestCharacterDetails(forId: id, atIndex: index) { success in
                 if success {
                     print("CollectionViewController > Successfully requested Character Details.")
                     DispatchQueue.main.async {
-                        self.comicTableViewController?.reloadInputViews()
+                        self.detailTableTableViewController?.reloadInputViews()
                     }
                 }
             }
@@ -129,6 +138,7 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
             make.right.bottom.equalTo(informationContainer).inset(14)
             make.height.equalTo(50)
         }
+        bottomLabel.isHidden = true
     }
     
     private func setupCharacterLayout() {

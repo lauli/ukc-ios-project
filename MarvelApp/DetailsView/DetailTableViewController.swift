@@ -27,7 +27,7 @@ class DetailTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 300.0
+        return 500.0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -35,17 +35,8 @@ class DetailTableViewController: UITableViewController {
             return tableView.dequeueReusableCell(withIdentifier: "DetailComicsCell", for: indexPath)
         }
         
-        switch marvelType {
-        case .comics:
-            //cell.marvelObject = dataManager.comics[indexPath.row]
-            break
-        case .characters:
-            cell.marvelObject = marvelObject
-            cell.marvelType = marvelType
-        case .creators:
-            //cell.marvelObject = dataManager.creators[indexPath.row]
-            break
-        }
+        cell.marvelObject = marvelObject
+        cell.marvelType = marvelType
         
         return cell
     }
@@ -53,9 +44,20 @@ class DetailTableViewController: UITableViewController {
     override func reloadInputViews() {
         super.reloadInputViews()
         
-        if let comicCell = self.tableView.cellForRow(at: IndexPath(item: 0, section: 0)) as? DetailTableViewCell {
-            comicCell.updateInformationOnLabels()
+        if let cell = self.tableView.cellForRow(at: IndexPath(item: 0, section: 0)) as? DetailTableViewCell {
+            cell.updateInformationOnLabels()
         }
     }
-
+    
+    // MARK: - Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let detailCollectionViewController = segue.destination as? DetailCollectionViewController else {
+                return
+        }
+        
+        detailCollectionViewController.marvelType = marvelType
+        detailCollectionViewController.marvelObject = marvelObject
+        detailCollectionViewController.requestData()
+    }
 }

@@ -34,11 +34,13 @@ final class DataManager {
     typealias Success = (Bool) -> ()
     typealias RetrievedData = (Int, Bool) -> ()
     typealias ImageData = (UIImage?, Bool) -> ()
+    typealias DetailArrayData = ([MarvelObject]?, Bool) -> ()
+    typealias SearchData = (MarvelObject?, Bool) -> ()
     
     init() {
         hash = md5("\(timeStamp)" + apiKeyPrivate + apiKey)
     }
-
+    
     // MARK: - DATA REQUESTS
     // MARK: -Request basic information
     
@@ -86,7 +88,7 @@ final class DataManager {
                 if success {
                     let oldAlreadyRequestedAmount = self.alreadyRequestedAmount[type.rawValue] ?? 0
                     self.alreadyRequestedAmount[type.rawValue] = oldAlreadyRequestedAmount + amount
-
+                    
                     let amountOfFetchedObjects: Int
                     switch type {
                     case .comics:
@@ -216,10 +218,10 @@ final class DataManager {
     
     // MARK: -Request Standalone Character
     
-    func requestCharacter(forId id: Int, atIndex index: Int, completion: @escaping Success) {
+    func requestCharacterDetails(forId id: Int, atIndex index: Int, completion: @escaping Success) {
         
         var url = "https://gateway.marvel.com:443/v1/public/characters?"
-        url.append("&id=\(id)")
+        url.append("id=\(id)")
         url.append("&ts=\(timeStamp)")
         url.append("&apikey=" + apiKey)
         url.append("&hash=" + hash)
@@ -267,9 +269,9 @@ final class DataManager {
                     
                     guard let c = comic as? [String: Any],
                         let name = c["name"] as? String else {
-                        print("DataManger > Couldn't retrieve exact data from JSON for character details > comic name.")
-                        completion(false)
-                        return
+                            print("DataManger > Couldn't retrieve exact data from JSON for character details > comic name.")
+                            completion(false)
+                            return
                     }
                     comics.append(name)
                 }
@@ -281,6 +283,259 @@ final class DataManager {
                 
             }
             completion(true)
+            
+        }
+        
+        dataTask.resume()
+    }
+    
+    // MARK: -Request Standalone Comic
+    
+    func requestComicDetails(forId id: Int, atIndex index: Int, completion: @escaping Success) {
+        
+        var url = "https://gateway.marvel.com:443/v1/public/comics?"
+        url.append("id=\(id)")
+        url.append("&ts=\(timeStamp)")
+        url.append("&apikey=" + apiKey)
+        url.append("&hash=" + hash)
+        
+        let dataTask = URLSession.shared.dataTask(with: URL(string: url)!) { data, response, error in
+            guard let data = data else {
+                print("DataManger > Couldn't fetch data from URL.")
+                print(error?.localizedDescription as Any)
+                return
+            }
+            
+            guard let (resultsArray, _) = self.resultsOfJSONDecoding(forData: data) else {
+                completion(false)
+                return
+            }
+            
+            guard let results = resultsArray as? [Any] else {
+                completion(false)
+                return
+            }
+            
+            for result in results {
+                // get detail info
+                guard let comic = result as? [String: Any],
+                    let name = comic["title"] as? String,
+                    let description = comic["description"] as? String?,
+                    let format = comic["format"] as? String?,
+                    let pageCount = comic["pageCount"] as? Int?,
+                    let issueNumber = comic["issueNumber"] as? Double?,
+                    let characterList = comic["characters"] as? [String: Any],
+                    let creatorList = comic["creators"] as? [String: Any] else {
+                        print("DataManger > Couldn't retrieve exact data from JSON for character details.")
+                        completion(false)
+                        return
+                }
+                
+                // get character info
+                guard let characterTotal = characterList["available"] as? Int?,
+                    let firstCharacters = characterList["items"] as? [Any] else {
+                        print("DataManger > Couldn't retrieve exact data from JSON for character details > character.")
+                        completion(false)
+                        return
+                }
+                
+                // get array of character names
+                var characters = [String]()
+                for character in firstCharacters {
+                    
+                    guard let c = character as? [String: Any],
+                        let name = c["name"] as? String else {
+                            print("DataManger > Couldn't retrieve exact data from JSON for character details > character name.")
+                            completion(false)
+                            return
+                    }
+                    characters.append(name)
+                }
+                
+                // get creator info
+                guard let creatorTotal = creatorList["available"] as? Int?,
+                    let firstCreators = creatorList["items"] as? [Any] else {
+                        print("DataManger > Couldn't retrieve exact data from JSON for character details > creator.")
+                        completion(false)
+                        return
+                }
+                
+                // get array of creator names
+                var creators = [String]()
+                for creator in firstCreators {
+                    
+                    guard let c = creator as? [String: Any],
+                        let name = c["name"] as? String else {
+                            print("DataManger > Couldn't retrieve exact data from JSON for character details > creator name.")
+                            completion(false)
+                            return
+                    }
+                    creators.append(name)
+                }
+                
+                // adding Details to character in character array
+                if self.comics[index].name == name {
+                    self.comics[index].description = description
+                    self.comics[index].format = format
+                    self.comics[index].issueNumber = Int(issueNumber ?? 0)
+                    self.comics[index].pages = pageCount
+                    self.comics[index].characterTotal = characterTotal
+                    self.comics[index].creatorTotal = creatorTotal
+                    self.comics[index].characters = characters
+                    self.comics[index].creators = creators
+                }
+                
+            }
+            completion(true)
+            
+        }
+        
+        dataTask.resume()
+    }
+    
+    
+    // MARK: -Request Details for Objects
+    
+    func requestDataForDetailCollectionView(about type: Type, from marvelObject: MarvelObject, completion: @escaping DetailArrayData) {
+        switch type {
+        case .comics:
+            if let marvelObject = marvelObject as? Character,
+                let comicNames = marvelObject.details?.comics {
+                
+                var counter = 1
+                var returnedComics = [Comic]()
+                
+                for comicName in comicNames {
+                    searchForType(.comics, name: comicName) { returnedValue, success in
+                        counter += 1
+                        
+                        if success, let comic = returnedValue as? Comic {
+                            returnedComics.append(comic)
+                        }
+                        
+                        //if counter == comicNames.count {
+                            completion(returnedComics, true)
+                        //}
+                    }
+                }
+                
+                
+            } else if let _ = marvelObject as? Creator {
+                completion(nil, false)
+            }
+            
+        case .characters:
+            if let marvelObject = marvelObject as? Comic,
+                let comicNames = marvelObject.characters {
+                
+                var counter = 1
+                var returnedCharacters = [Character]()
+                
+                for comicName in comicNames {
+                    searchForType(.comics, name: comicName) { returnedValue, success in
+                        counter += 1
+                        
+                        if success, let comic = returnedValue as? Character {
+                            returnedCharacters.append(comic)
+                        }
+                        
+                        //if counter == comicNames.count {
+                        completion(returnedCharacters, true)
+                        //}
+                    }
+                }
+                
+                
+            } else if let _ = marvelObject as? Creator {
+                completion(nil, false)
+            }
+            
+        default:
+            break
+        }
+        
+        completion(nil, false)
+    }
+    
+    private func searchForType(_ type: Type, name: String, completion: @escaping SearchData) {
+        // check if name needs to be converted to utf-8
+        guard let encodedName = name.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed) else {
+                completion(nil, false)
+                return
+        }
+        
+        let nameKey: String
+        
+        switch type {
+        case .comics:
+            nameKey = "title"
+        case .characters:
+            nameKey = "name"
+        case .creators:
+            nameKey = "nameStartsWith"
+        }
+        
+        var url = "https://gateway.marvel.com:443/v1/public/comics?"
+        url.append("\(nameKey)=\(encodedName)")
+        url.append("&ts=\(timeStamp)")
+        url.append("&apikey=" + apiKey)
+        url.append("&hash=" + hash)
+        
+        guard let encodedURL = URL(string: url) else {
+            completion(nil, false)
+            return
+        }
+        
+        let dataTask = URLSession.shared.dataTask(with: encodedURL) { data, response, error in
+            guard let data = data else {
+                print("DataManger > Couldn't fetch data from URL.")
+                print(error?.localizedDescription as Any)
+                completion(nil, false)
+                return
+            }
+            
+            guard let (resultsArray, _) = self.resultsOfJSONDecoding(forData: data) else {
+                completion(nil, false)
+                return
+            }
+            
+            guard let results = resultsArray as? [Any] else {
+                completion(nil, false)
+                return
+            }
+            
+            let nameKey: String
+            
+            switch type {
+            case .comics:
+                nameKey = "title"
+            case .characters:
+                nameKey = "name"
+            case .creators:
+                nameKey = "fullName"
+            }
+            
+            guard let object = results.first as? [String: Any],
+                let id = object["id"] as? Int,
+                let name = object["\(nameKey)"] as? String,
+                let thumbnailInfo = object["thumbnail"] as? [String: String],
+                let imagePath = thumbnailInfo["path"],
+                let imageExtension = thumbnailInfo["extension"] else {
+                    print("DataManger > decodeData() -> Couldn't retrieve exact data from JSON.")
+                    completion(nil, false)
+                    return
+            }
+
+            let imageUrl = imagePath + "." + imageExtension
+            
+            switch type {
+            case .comics:
+                completion(Comic(id: id, name: name, thumbnail: imageUrl), true)
+            case .characters:
+                completion(Character(id: id, name: name, thumbnail: imageUrl), true)
+            case .creators:
+                completion(Creator(id: id, name: name, thumbnail: imageUrl), true)
+            }
             
         }
         
@@ -305,4 +560,21 @@ extension DataManager {
         return hexString
     }
     
+}
+
+
+extension String {
+    func utf8DecodedString()-> String {
+        let data = self.data(using: .utf8)
+        if let message = String(data: data!, encoding: .nonLossyASCII){
+            return message
+        }
+        return ""
+    }
+    
+    func utf8EncodedString()-> String {
+        let messageData = self.data(using: .nonLossyASCII)
+        let text = String(data: messageData!, encoding: .utf8)!
+        return text
+    }
 }

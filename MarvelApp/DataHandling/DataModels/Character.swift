@@ -15,10 +15,7 @@ final class Character: MarvelObject {
     
     init(id: Int, name: String, thumbnail: String?, additionalInfo: Details? = nil) {
         super.init(id: id, name: name, thumbnail: thumbnail)
-        
-        if let details = additionalInfo {
-            self.details = details
-        }
+        self.details = additionalInfo
     }
     
     class Details {

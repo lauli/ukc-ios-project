@@ -12,7 +12,7 @@ final class Comic: MarvelObject {
     
     // additional information
     var description, format: String?
-    var issueNumber, pages, price: Int?
+    var characterTotal, creatorTotal, issueNumber, pages, price: Int? // TODO: prices is an own class. do i want to implement this as well?
     var creators: [String]? // id for creators
     var characters: [String]? // id for characters
     
