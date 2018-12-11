@@ -61,14 +61,22 @@ class DetailTableViewCell: UITableViewCell {
                 return
             }
             
-            // set title and amount
-            titleLabel.text = "Character appearances:"
-            amountLabel.text = "\(comic.characterTotal ?? 0)"
+            switch index {
+            case 0:
+                titleLabel.text = "Character appearances:"
+                amountLabel.text = "\(comic.characterTotal ?? 0)"
+                setupInformationLabel(for: comic.characters ?? [String]())
+                
+            case 1:
+                titleLabel.text = "Creators involved:"
+                amountLabel.text = "\(comic.creatorTotal ?? 0)"
+                setupInformationLabel(for: comic.creators ?? [String]())
+                
+            default:
+                break
+            }
             
-            setupInformationLabel(for: comic.characters ?? [String]())
-            
-            
-            
+
         case .characters:
             guard let character = marvelObject as? Character, let details = character.details else {
                 return

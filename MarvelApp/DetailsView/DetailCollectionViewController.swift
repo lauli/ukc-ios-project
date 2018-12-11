@@ -17,7 +17,9 @@ class DetailCollectionViewController: UICollectionViewController, UICollectionVi
     
     private var objectsToShow: [MarvelObject]? {
         didSet {
-            self.collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     
@@ -44,7 +46,7 @@ class DetailCollectionViewController: UICollectionViewController, UICollectionVi
         
         switch marvelType {
         case .comics:
-            requestType = .characters
+            requestType = .creators
         case .characters:
             requestType = .comics
         default:
@@ -88,6 +90,13 @@ class DetailCollectionViewController: UICollectionViewController, UICollectionVi
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch marvelType {
+        case .comics:
+            guard let comic = marvelObject as? Comic else {
+                return 0
+            }
+            // TODO: implement for characters too
+            return comic.creatorTotal ?? 0
+            
         case .characters:
             guard let character = marvelObject as? Character, let comics = character.details?.comics else {
                 return 0
@@ -99,7 +108,7 @@ class DetailCollectionViewController: UICollectionViewController, UICollectionVi
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let objectsToShow = objectsToShow, objectsToShow.count != 0 else {
+        guard let objectsToShow = objectsToShow, objectsToShow.count != 0, objectsToShow.count > indexPath.row else {
             return collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
         }
         

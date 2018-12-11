@@ -23,11 +23,16 @@ class DetailTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        switch marvelType {
+        case .comics:
+            return 2
+        default:
+            return 1
+        }
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 500.0
+        return 300.0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -46,6 +51,9 @@ class DetailTableViewController: UITableViewController {
         
         if let cell = self.tableView.cellForRow(at: IndexPath(item: 0, section: 0)) as? DetailTableViewCell {
             cell.updateInformationOnLabels()
+        }
+        if let cell = self.tableView.cellForRow(at: IndexPath(item: 1, section: 0)) as? DetailTableViewCell {
+            cell.updateInformationOnLabels(byIndex: 1)
         }
     }
     

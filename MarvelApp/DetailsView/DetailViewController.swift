@@ -130,7 +130,7 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         tableViewContainer.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom)
             make.left.right.equalTo(informationContainer)
-            make.height.equalTo(500)
+            make.height.equalTo(600)
         }
         
         bottomLabel.snp.makeConstraints { make in

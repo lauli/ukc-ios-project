@@ -413,9 +413,9 @@ final class DataManager {
                             returnedComics.append(comic)
                         }
                         
-                        //if counter == comicNames.count {
+                        if counter == comicNames.count {
                             completion(returnedComics, true)
-                        //}
+                        }
                     }
                 }
                 
@@ -450,8 +450,29 @@ final class DataManager {
                 completion(nil, false)
             }
             
-        default:
-            break
+        case .creators:
+            if let marvelObject = marvelObject as? Comic,
+                let creatorNames = marvelObject.creators {
+                
+                var counter = 1
+                var returnedCreators = [Creator]()
+                
+                for creatorName in creatorNames {
+                    searchForType(.creators, name: creatorName) { returnedValue, success in
+                        counter += 1
+                        
+                        if success, let creator = returnedValue as? Creator {
+                            returnedCreators.append(creator)
+                        }
+                        
+                        //if counter == comicNames.count {
+                        completion(returnedCreators, true)
+                        //}
+                    }
+                }
+                
+                
+            }
         }
         
         completion(nil, false)
@@ -475,7 +496,8 @@ final class DataManager {
             nameKey = "nameStartsWith"
         }
         
-        var url = "https://gateway.marvel.com:443/v1/public/comics?"
+        var url = "https://gateway.marvel.com:443/v1/public/"
+        url.append(type.rawValue + "?")
         url.append("\(nameKey)=\(encodedName)")
         url.append("&ts=\(timeStamp)")
         url.append("&apikey=" + apiKey)
