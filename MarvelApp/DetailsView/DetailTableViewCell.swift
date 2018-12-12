@@ -12,8 +12,8 @@ import SnapKit
 class DetailTableViewCell: UITableViewCell {
     
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var amountLabel: UILabel!
-    @IBOutlet weak var arrowImageView: UIImageView!
+    @IBOutlet private weak var amountLabel: UILabel!
+    @IBOutlet private weak var arrowButton: UIButton!
     @IBOutlet weak var informationLabel: UILabel!
     @IBOutlet weak var showMoreButton: UIButton!
     
@@ -27,18 +27,28 @@ class DetailTableViewCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
-        // Configure the view for the selected state
     }
     
     private func setupLayout() {
         
+        setupContentConstraints(height: 50)
+        
         titleLabel.snp.makeConstraints { make in
             make.left.equalTo(contentView).offset(20)
+            make.top.equalTo(contentView)
         }
         
-        amountLabel.snp.makeConstraints { make in
+        arrowButton.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel)
             make.right.equalTo(contentView).inset(20)
+            make.height.width.equalTo(20)
+        }
+        arrowButton.setBackgroundImage(UIImage(named: "arrow-down"), for: .normal)
+        arrowButton.setTitle("", for: .normal)
+        
+        amountLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel)
+            make.right.equalTo(arrowButton).inset(30)
         }
         
         informationLabel.snp.makeConstraints { make in
@@ -47,10 +57,17 @@ class DetailTableViewCell: UITableViewCell {
             make.top.equalTo(titleLabel).offset(50)
         }
         informationLabel.numberOfLines = 0
+        informationLabel.isHidden = true
         
         showMoreButton.snp.makeConstraints { make in
-            make.top.equalTo(informationLabel.snp.bottom).offset(30)
+            make.top.equalTo(informationLabel.snp.bottom).offset(10)
+            make.bottom.equalTo(contentView).inset(10)
+            make.height.equalTo(15)
+            make.centerX.equalTo(contentView)
         }
+        showMoreButton.isHidden = true
+        
+        showInformationLabel(false)
     }
     
     func updateInformationOnLabels(byIndex index: Int = 0) {
@@ -83,7 +100,7 @@ class DetailTableViewCell: UITableViewCell {
             }
             
             // set title and amount
-            titleLabel.text = "Number of Comics:"
+            titleLabel.text = "Number of Comic Appearances:"
             amountLabel.text = "\(details.amountOfComics ?? 0)"
             
             setupInformationLabel(for: details.comics ?? [String]())
@@ -92,6 +109,50 @@ class DetailTableViewCell: UITableViewCell {
             titleLabel.text = ""
         }
         
+    }
+    
+    func showInformationLabel(_ show: Bool) {
+        if show {
+            informationLabel.isHidden = false
+            showMoreButton.isHidden = false
+            arrowButton.setBackgroundImage(UIImage(named: "arrow-up"), for: .normal)
+            
+        } else {
+            informationLabel.isHidden = true
+            showMoreButton.isHidden = true
+            arrowButton.setBackgroundImage(UIImage(named: "arrow-down"), for: .normal)
+        }
+        
+        resetHeightForContentView()
+    }
+    
+    private func resetHeightForContentView() {
+        let height: CGFloat
+        
+        if showMoreButton.isHidden {
+            height = titleLabel.bounds.size.height + 30
+        
+        } else {
+            let informationLabelHeight = informationLabel.text?.height(constraintedWidth: informationLabel.bounds.width,
+                                                                       font: informationLabel.font)
+            
+            height = titleLabel.bounds.size.height + showMoreButton.bounds.size.height + informationLabelHeight! + 90
+        }
+
+        setupContentConstraints(height: height)
+    }
+    
+    private func setupContentConstraints(height: CGFloat) {
+        let newCellSubViewsFrame = CGRect(x: 0, y: 0,
+                                          width: self.frame.size.width, height: height)
+        let newCellViewFrame = CGRect(x: self.frame.origin.x, y: self.frame.origin.y,
+                                      width:self.frame.size.width, height: height)
+        
+        self.contentView.frame = newCellSubViewsFrame
+        self.contentView.bounds = newCellSubViewsFrame
+        self.backgroundView?.frame = newCellSubViewsFrame
+        self.accessoryView?.frame = newCellSubViewsFrame
+        self.frame = newCellViewFrame
     }
     
     private func setupInformationLabel(for array: [String]) {
@@ -106,4 +167,16 @@ class DetailTableViewCell: UITableViewCell {
         informationLabel.text?.append("...")
     }
     
+}
+
+extension String {
+    func height(constraintedWidth width: CGFloat, font: UIFont) -> CGFloat {
+        let label =  UILabel(frame: CGRect(x: 0, y: 0, width: width, height: .greatestFiniteMagnitude))
+        label.numberOfLines = 0
+        label.text = self
+        label.font = font
+        label.sizeToFit()
+        
+        return label.frame.height
+    }
 }

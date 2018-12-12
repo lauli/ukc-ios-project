@@ -175,6 +175,14 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aiI-kE-afa">
+                                                <rect key="frame" x="305" y="8" width="46" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="Button"/>
+                                                <connections>
+                                                    <action selector="favButtonTapped:" destination="DIb-zs-eSq" eventType="touchUpInside" id="hma-bg-F8T"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
@@ -187,6 +195,7 @@
                     <navigationItem key="navigationItem" title="Detail View Controller" id="IIF-LW-fTU"/>
                     <connections>
                         <outlet property="bottomLabel" destination="arv-3R-fFI" id="nW8-xb-RWa"/>
+                        <outlet property="favButton" destination="aiI-kE-afa" id="qP1-13-1JS"/>
                         <outlet property="imageContainer" destination="vkp-Xe-yb8" id="dq9-cK-Y0F"/>
                         <outlet property="imageView" destination="UIs-a6-FDP" id="oMU-cS-pXU"/>
                         <outlet property="informationContainer" destination="qhU-LA-Fze" id="GLI-5d-eEM"/>
@@ -237,10 +246,6 @@
                                                 <segue destination="SPO-JY-62c" kind="show" id="y4s-47-j77"/>
                                             </connections>
                                         </button>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rmi-Vr-WTK">
-                                            <rect key="frame" x="302" y="22" width="25" height="25"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Amount" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VP8-QP-RaX">
                                             <rect key="frame" x="234" y="24" width="60" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -248,11 +253,19 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cvv-K4-Zi3">
+                                            <rect key="frame" x="297" y="20" width="46" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Button"/>
+                                            <connections>
+                                                <action selector="arrowButtonTapped:" destination="yCA-OR-jfE" eventType="touchUpInside" id="amg-To-he2"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="amountLabel" destination="VP8-QP-RaX" id="1dz-Kk-gqJ"/>
-                                    <outlet property="arrowImageView" destination="rmi-Vr-WTK" id="oXC-nX-07a"/>
+                                    <outlet property="arrowButton" destination="Cvv-K4-Zi3" id="WeB-cF-xZz"/>
                                     <outlet property="informationLabel" destination="G80-mX-jJg" id="Qlo-PR-huE"/>
                                     <outlet property="showMoreButton" destination="ZKA-5v-OTH" id="w74-fQ-TvC"/>
                                     <outlet property="titleLabel" destination="dvG-2u-acy" id="gOX-gl-N14"/>

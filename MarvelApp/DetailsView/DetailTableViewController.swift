@@ -15,7 +15,7 @@ class DetailTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //self.tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: "DetailComicsCell")
+        tableView.tableFooterView = UIView(frame: .zero) // TODO: maybe add sharing feature here?
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -29,10 +29,6 @@ class DetailTableViewController: UITableViewController {
         default:
             return 1
         }
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 300.0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -68,4 +64,19 @@ class DetailTableViewController: UITableViewController {
         detailCollectionViewController.marvelObject = marvelObject
         detailCollectionViewController.requestData()
     }
+    
+    @IBAction func arrowButtonTapped(_ sender: UIButton) {
+        
+        guard let cell = sender.superview?.superview as? DetailTableViewCell else {
+            return
+        }
+
+        if cell.showMoreButton.isHidden {
+            cell.showInformationLabel(true)
+        } else {
+            cell.showInformationLabel(false)
+        }
+
+    }
+    
 }

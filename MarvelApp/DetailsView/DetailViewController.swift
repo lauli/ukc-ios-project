@@ -22,13 +22,18 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var bottomLabel: UILabel!
     
+    @IBOutlet weak var favButton: UIButton!
+    
+    private let dataManager = DataManager.shared
+    private var isFav = false
+    private var detailTableTableViewController: DetailTableViewController?
+
+    
     var marvelType: Type = .characters
     var marvelObject: MarvelObject?
     var preDownloadedImage: UIImage?
     
-    private let dataManager = DataManager.shared
     
-    private var detailTableTableViewController: DetailTableViewController?
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -39,6 +44,7 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         
         setupLayout()
         setupCharacterLayout()
+        setupFavButton()
 
     }
     
@@ -127,10 +133,15 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
             make.height.equalTo(titleLabel.optimalHeight)
         }
         
+        favButton.snp.makeConstraints { make in
+            make.top.right.equalTo(titleLabel)
+            make.width.height.equalTo(32)
+        }
+        
         tableViewContainer.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom)
             make.left.right.equalTo(informationContainer)
-            make.height.equalTo(600)
+            make.height.equalTo(400)
         }
         
         bottomLabel.snp.makeConstraints { make in
@@ -167,6 +178,49 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
                 }
             }
         }
+    }
+    
+    private func setupFavButton() {
+        var imageName = "fav-empty"
+        favButton.setTitle("", for: .normal)
+        
+        guard let favs = UserDefaults.standard.array(forKey: "\(marvelType.rawValue)FavId") as? [Int] else {
+            favButton.setBackgroundImage(UIImage(named: imageName), for: .normal)
+            return
+        }
+        
+        
+        for id in favs {
+            if id == marvelObject?.id {
+                imageName = "fav-full"
+                isFav = true
+            }
+        }
+        
+        favButton.setBackgroundImage(UIImage(named: imageName), for: .normal)
+    }
+    
+    @IBAction func favButtonTapped(_ sender: Any) {
+        if UserDefaults.standard.array(forKey: "\(marvelType.rawValue)FavId") == nil {
+            UserDefaults.standard.set([marvelObject?.id], forKey: "\(marvelType.rawValue)FavId")
+        }
+        
+        var favs = UserDefaults.standard.array(forKey: "\(marvelType.rawValue)FavId") as! [Int]
+        
+        if isFav {
+            let newFavs = favs.filter {$0 != marvelObject?.id}
+            UserDefaults.standard.set(newFavs, forKey: "\(marvelType.rawValue)FavId")
+            
+            favButton.setBackgroundImage(UIImage(named: "fav-empty"), for: .normal)
+        
+        } else if let marvelObject = marvelObject {
+            favs.append(marvelObject.id)
+            UserDefaults.standard.set(favs, forKey: "\(marvelType.rawValue)FavId")
+            
+            favButton.setBackgroundImage(UIImage(named: "fav-full"), for: .normal)
+        }
+        
+        isFav = !isFav
     }
 
 }
