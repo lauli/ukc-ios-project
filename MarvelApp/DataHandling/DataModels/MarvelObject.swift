@@ -9,14 +9,24 @@
 import Foundation
 
 class MarvelObject {
+    
     // must haves
+    let type: Type
     let id: Int
     let name: String
     let thumbnail: String?
     
-    init(id: Int, name: String, thumbnail: String?) {
+    // additional information
+    var description: String? = nil
+    var comics: [String]? = nil // name for first 20 comics, or less
+    var characters: [String]? = nil // name for first 20 characters, or less
+    var creators: [String]? = nil // name for first 20 creators, or less
+    
+    init(type: Type, id: Int, name: String, thumbnail: String?) {
+        self.type = type
         self.id = id
         self.name = name
         self.thumbnail = thumbnail
     }
+
 }

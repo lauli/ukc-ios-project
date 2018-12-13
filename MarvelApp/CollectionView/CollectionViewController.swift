@@ -67,14 +67,13 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
                 return
         }
         
-        guard let id = cell.marvelObject?.id, let indexPath = collectionView.indexPath(for: cell) else {
+        guard let marvelObject = cell.marvelObject, let indexPath = collectionView.indexPath(for: cell) else {
             return
         }
 
-        detailsViewController.marvelType = marvelType
-        detailsViewController.marvelObject = cell.marvelObject
+        detailsViewController.marvelObject = marvelObject
         detailsViewController.preDownloadedImage = cell.imageView?.image
-        detailsViewController.requestDetails(forId: id, atIndex: indexPath.row)
+        detailsViewController.requestDetails(atIndex: indexPath.row)
     }
 
     // MARK: - UICollectionViewDataSource

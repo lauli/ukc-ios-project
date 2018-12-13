@@ -10,8 +10,7 @@ import UIKit
 
 class DetailTableViewController: UITableViewController {
 
-    var marvelType: Type = .characters
-    var marvelObject: MarvelObject?
+    var marvelObject: MarvelObject = MarvelObject(type: .characters, id: 0, name: "", thumbnail: "")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,7 +22,7 @@ class DetailTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch marvelType {
+        switch marvelObject.type {
         case .comics:
             return 2
         default:
@@ -37,7 +36,6 @@ class DetailTableViewController: UITableViewController {
         }
         
         cell.marvelObject = marvelObject
-        cell.marvelType = marvelType
         
         return cell
     }
@@ -60,7 +58,6 @@ class DetailTableViewController: UITableViewController {
                 return
         }
         
-        detailCollectionViewController.marvelType = marvelType
         detailCollectionViewController.marvelObject = marvelObject
         detailCollectionViewController.requestData()
     }

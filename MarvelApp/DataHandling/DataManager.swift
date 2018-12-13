@@ -14,6 +14,8 @@ final class DataManager {
     // singleton
     static let shared: DataManager = DataManager()
     
+    private let decoder = Decoder()
+    
     // url information, keys
     private let basicUrl = "https://gateway.marvel.com:443/v1/public/"
     private let apiKey = "d932666c3ae84f7d478dd9c80b94c47e"
@@ -109,7 +111,7 @@ final class DataManager {
     
     private func decodeBasicData(_ data: Data, forType type: Type, completion: @escaping Success) {
         
-        guard let (resultsArray, totalAmount) = resultsOfJSONDecoding(forData: data) else {
+        guard let (resultsArray, totalAmount) = decoder.results(forData: data) else {
             completion(false)
             return
         }
@@ -133,69 +135,30 @@ final class DataManager {
         }
         
         for result in results {
-            guard let object = result as? [String: Any],
-                let id = object["id"] as? Int,
-                let name = object["\(nameKey)"] as? String,
-                let thumbnailInfo = object["thumbnail"] as? [String: String],
-                let imagePath = thumbnailInfo["path"],
-                let imageExtension = thumbnailInfo["extension"] else {
-                    print("DataManger > decodeData() -> Couldn't retrieve exact data from JSON.")
+            guard let object = result as? [String: Any], let marvelObject = self.decoder.basicObjectInformation(fromJSON: object, forType: type) else {
+                    print("DataManger > decodeBasicData -> Couldn't retrieve exact data from JSON.")
                     completion(false)
                     return
             }
-            if imagePath == "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available" {
+            if marvelObject.thumbnail == "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" {
                 // the database doesn't have a picture, therefore we wanna skip the object
                 continue
             }
-            let imageUrl = imagePath + "." + imageExtension
             
             switch type {
             case .comics:
-                comics.append(Comic(id: id, name: name, thumbnail: imageUrl))
+                comics.append(Comic(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail))
             case .characters:
-                characters.append(Character(id: id, name: name, thumbnail: imageUrl))
+                characters.append(Character(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail))
             case .creators:
-                creators.append(Creator(id: id, name: name, thumbnail: imageUrl))
+                creators.append(Creator(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail))
             }
         }
         
         completion(true)
     }
     
-    private func resultsOfJSONDecoding(forData data: Data) -> (Any, Int)? {
-        do {
-            guard let jsonData = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
-                print("json -> Not a [String: Any]")
-                return nil
-            }
-            
-            guard let code = jsonData["code"] as? Int, code == 200 else {
-                print("code is not 200")
-                return nil
-            }
-            
-            guard let data = jsonData["data"] as? [String: Any] else {
-                print("data -> Not a [String: Any]")
-                return nil
-            }
-            
-            guard let results = data["results"] as? [Any] else {
-                print("results -> Not a [String: Any]")
-                return nil
-            }
-            
-            guard let totalCount = data["total"] as? Int else {
-                print("total -> Not an Int")
-                return nil
-            }
-            
-            return (results, totalCount)
-            
-        } catch let error {
-            print("Decoding error: " + error.localizedDescription)
-            return nil
-        }
-    }
+    
     
     // MARK: -Request Image
     
@@ -216,85 +179,12 @@ final class DataManager {
         dataTask.resume()
     }
     
-    // MARK: -Request Standalone Character
-    
-    func requestCharacterDetails(forId id: Int, atIndex index: Int, completion: @escaping Success) {
-        
-        var url = "https://gateway.marvel.com:443/v1/public/characters?"
-        url.append("id=\(id)")
-        url.append("&ts=\(timeStamp)")
-        url.append("&apikey=" + apiKey)
-        url.append("&hash=" + hash)
-        
-        let dataTask = URLSession.shared.dataTask(with: URL(string: url)!) { data, response, error in
-            guard let data = data else {
-                print("DataManger > Couldn't fetch data from URL.")
-                print(error?.localizedDescription as Any)
-                return
-            }
-            
-            guard let (resultsArray, _) = self.resultsOfJSONDecoding(forData: data) else {
-                completion(false)
-                return
-            }
-            
-            guard let results = resultsArray as? [Any] else {
-                completion(false)
-                return
-            }
-            
-            for result in results {
-                // get detail info
-                guard let character = result as? [String: Any],
-                    let name = character["name"] as? String,
-                    let description = character["description"] as? String?,
-                    let comicList = character["comics"] as? [String: Any] else {
-                        print("DataManger > Couldn't retrieve exact data from JSON for character details.")
-                        completion(false)
-                        return
-                }
-                
-                // get comic info
-                guard let comicTotal = comicList["available"] as? Int?,
-                    let collectionURI = comicList["collectionURI"] as? String?,
-                    let firstComics = comicList["items"] as? [Any] else {
-                        print("DataManger > Couldn't retrieve exact data from JSON for character details > comics.")
-                        completion(false)
-                        return
-                }
-                
-                // get array of comic names
-                var comics = [String]()
-                for comic in firstComics {
-                    
-                    guard let c = comic as? [String: Any],
-                        let name = c["name"] as? String else {
-                            print("DataManger > Couldn't retrieve exact data from JSON for character details > comic name.")
-                            completion(false)
-                            return
-                    }
-                    comics.append(name)
-                }
-                
-                // adding Details to character in character array
-                if self.characters[index].name == name {
-                    self.characters[index].details = Character.Details(description: description, amountOfComics: comicTotal, comics: comics, url: collectionURI)
-                }
-                
-            }
-            completion(true)
-            
-        }
-        
-        dataTask.resume()
-    }
-    
     // MARK: -Request Standalone Comic
     
-    func requestComicDetails(forId id: Int, atIndex index: Int, completion: @escaping Success) {
+    func requestDetails(forObject object: MarvelObject, atArrayIndex index: Int, completion: @escaping Success) {
         
-        var url = "https://gateway.marvel.com:443/v1/public/comics?"
-        url.append("id=\(id)")
+        var url = "https://gateway.marvel.com:443/v1/public/\(object.type.rawValue)?"
+        url.append("id=\(object.id)")
         url.append("&ts=\(timeStamp)")
         url.append("&apikey=" + apiKey)
         url.append("&hash=" + hash)
@@ -306,83 +196,39 @@ final class DataManager {
                 return
             }
             
-            guard let (resultsArray, _) = self.resultsOfJSONDecoding(forData: data) else {
-                completion(false)
-                return
+            guard let (JSONDecoded, _) = self.decoder.results(forData: data),
+                let jsonList = JSONDecoded as? [Any] else {
+                    completion(false)
+                    return
             }
             
-            guard let results = resultsArray as? [Any] else {
-                completion(false)
-                return
-            }
-            
-            for result in results {
+            for result in jsonList {
                 // get detail info
-                guard let comic = result as? [String: Any],
-                    let name = comic["title"] as? String,
-                    let description = comic["description"] as? String?,
-                    let format = comic["format"] as? String?,
-                    let pageCount = comic["pageCount"] as? Int?,
-                    let issueNumber = comic["issueNumber"] as? Double?,
-                    let characterList = comic["characters"] as? [String: Any],
-                    let creatorList = comic["creators"] as? [String: Any] else {
-                        print("DataManger > Couldn't retrieve exact data from JSON for character details.")
-                        completion(false)
-                        return
+                
+                guard let json = result as? [String: Any] else {
+                    print("DataManger > requestDetails > Couldn't retrieve data from JSON for details.")
+                    completion(false)
+                    return
                 }
                 
-                // get character info
-                guard let characterTotal = characterList["available"] as? Int?,
-                    let firstCharacters = characterList["items"] as? [Any] else {
-                        print("DataManger > Couldn't retrieve exact data from JSON for character details > character.")
-                        completion(false)
-                        return
-                }
-                
-                // get array of character names
-                var characters = [String]()
-                for character in firstCharacters {
-                    
-                    guard let c = character as? [String: Any],
-                        let name = c["name"] as? String else {
-                            print("DataManger > Couldn't retrieve exact data from JSON for character details > character name.")
-                            completion(false)
-                            return
+                switch object.type {
+                case .comics:
+                    if let (name, newObject) = self.decoder.comicDetails(fromJSON: json, addToOldObject: object as! Comic),
+                        self.comics[index].name == name {
+                        self.comics[index] = newObject
                     }
-                    characters.append(name)
-                }
-                
-                // get creator info
-                guard let creatorTotal = creatorList["available"] as? Int?,
-                    let firstCreators = creatorList["items"] as? [Any] else {
-                        print("DataManger > Couldn't retrieve exact data from JSON for character details > creator.")
-                        completion(false)
-                        return
-                }
-                
-                // get array of creator names
-                var creators = [String]()
-                for creator in firstCreators {
                     
-                    guard let c = creator as? [String: Any],
-                        let name = c["name"] as? String else {
-                            print("DataManger > Couldn't retrieve exact data from JSON for character details > creator name.")
-                            completion(false)
-                            return
+                case .characters:
+                    if let (name, newObject) = self.decoder.characterDetails(fromJSON: json, addToOldObject: object as! Character),
+                        self.characters[index].name == name {
+                        self.characters[index] = newObject
                     }
-                    creators.append(name)
-                }
                 
-                // adding Details to character in character array
-                if self.comics[index].name == name {
-                    self.comics[index].description = description
-                    self.comics[index].format = format
-                    self.comics[index].issueNumber = Int(issueNumber ?? 0)
-                    self.comics[index].pages = pageCount
-                    self.comics[index].characterTotal = characterTotal
-                    self.comics[index].creatorTotal = creatorTotal
-                    self.comics[index].characters = characters
-                    self.comics[index].creators = creators
+                case .creators:
+                    if let (name, newObject) = self.decoder.creatorDetails(fromJSON: json, addToOldObject: object as! Creator),
+                        self.creators[index].name == name {
+                        self.creators[index] = newObject
+                    }
                 }
                 
             }
@@ -394,88 +240,82 @@ final class DataManager {
     }
     
     
-    // MARK: -Request Details for Objects
+    
+
+    
+    
+    // MARK: -Request Data from Detailobjects for DetailCollectionView
     
     func requestDataForDetailCollectionView(about type: Type, from marvelObject: MarvelObject, completion: @escaping DetailArrayData) {
+        var counter = 1
+        
         switch type {
         case .comics:
-            if let marvelObject = marvelObject as? Character,
-                let comicNames = marvelObject.details?.comics {
-                
-                var counter = 1
-                var returnedComics = [Comic]()
-                
-                for comicName in comicNames {
-                    searchForType(.comics, name: comicName) { returnedValue, success in
-                        counter += 1
-                        
-                        if success, let comic = returnedValue as? Comic {
-                            returnedComics.append(comic)
-                        }
-                        
-                        if counter == comicNames.count {
-                            completion(returnedComics, true)
-                        }
+            guard let comicNames = marvelObject.comics else {
+                completion(nil, false)
+                return
+            }
+            
+            var returnedComics = [Comic]()
+            
+            for comicName in comicNames {
+                searchForType(.comics, name: comicName) { returnedValue, success in
+                    counter += 1
+                    
+                    if success, let comic = returnedValue as? Comic {
+                        returnedComics.append(comic)
+                    }
+                    
+                    if counter == comicNames.count {
+                        completion(returnedComics, true)
                     }
                 }
-                
-                
-            } else if let _ = marvelObject as? Creator {
-                completion(nil, false)
             }
             
         case .characters:
-            if let marvelObject = marvelObject as? Comic,
-                let comicNames = marvelObject.characters {
-                
-                var counter = 1
-                var returnedCharacters = [Character]()
-                
-                for comicName in comicNames {
-                    searchForType(.comics, name: comicName) { returnedValue, success in
-                        counter += 1
-                        
-                        if success, let comic = returnedValue as? Character {
-                            returnedCharacters.append(comic)
-                        }
-                        
-                        //if counter == comicNames.count {
+            guard let characterNames = marvelObject.characters else {
+                completion(nil, false)
+                return
+            }
+            
+            var returnedCharacters = [Character]()
+            
+            for characterName in characterNames {
+                searchForType(.comics, name: characterName) { returnedValue, success in
+                    counter += 1
+                    
+                    if success, let comic = returnedValue as? Character {
+                        returnedCharacters.append(comic)
+                    }
+                    
+                    if counter == characterName.count {
                         completion(returnedCharacters, true)
-                        //}
                     }
                 }
-                
-                
-            } else if let _ = marvelObject as? Creator {
-                completion(nil, false)
             }
             
         case .creators:
-            if let marvelObject = marvelObject as? Comic,
-                let creatorNames = marvelObject.creators {
-                
-                var counter = 1
-                var returnedCreators = [Creator]()
-                
-                for creatorName in creatorNames {
-                    searchForType(.creators, name: creatorName) { returnedValue, success in
-                        counter += 1
-                        
-                        if success, let creator = returnedValue as? Creator {
-                            returnedCreators.append(creator)
-                        }
-                        
-                        //if counter == comicNames.count {
+            guard let creatorNames = marvelObject.creators else {
+                completion(nil, false)
+                return
+            }
+            
+            var returnedCreators = [Creator]()
+            
+            for creatorName in creatorNames {
+                searchForType(.creators, name: creatorName) { returnedValue, success in
+                    counter += 1
+                    
+                    if success, let creator = returnedValue as? Creator {
+                        returnedCreators.append(creator)
+                    }
+                    
+                    if counter == creatorName.count {
                         completion(returnedCreators, true)
-                        //}
                     }
                 }
-                
-                
             }
         }
-        
-        completion(nil, false)
     }
     
     private func searchForType(_ type: Type, name: String, completion: @escaping SearchData) {
@@ -516,7 +356,7 @@ final class DataManager {
                 return
             }
             
-            guard let (resultsArray, _) = self.resultsOfJSONDecoding(forData: data) else {
+            guard let (resultsArray, _) = self.decoder.results(forData: data) else {
                 completion(nil, false)
                 return
             }
@@ -600,3 +440,4 @@ extension String {
         return text
     }
 }
+

@@ -23,8 +23,7 @@ class DetailCollectionViewController: UICollectionViewController, UICollectionVi
         }
     }
     
-    var marvelType: Type = .characters
-    var marvelObject: MarvelObject?
+    var marvelObject: MarvelObject = MarvelObject(type: .characters, id: 0, name: "", thumbnail: "")
     
     
     override func viewDidLoad() {
@@ -38,24 +37,20 @@ class DetailCollectionViewController: UICollectionViewController, UICollectionVi
     
     func requestData() {
         
-        guard let marvelObject = marvelObject else {
-            return
-        }
-        
         let requestType: Type
         
-        switch marvelType {
+        switch marvelObject.type {
         case .comics:
             requestType = .creators
         case .characters:
             requestType = .comics
-        default:
-            return
+        case .creators:
+            requestType = .comics
         }
         
         dataManager.requestDataForDetailCollectionView(about: requestType, from: marvelObject) { values, success in
             if success {
-                print("DetailCollectionViewController > Successfully downloaded DataForDetailCollectionView for \(self.marvelType.rawValue).")
+                print("DetailCollectionViewController > Successfully downloaded DataForDetailCollectionView for \(self.marvelObject.type.rawValue).")
                 
                 self.objectsToShow = values
             }
@@ -71,14 +66,13 @@ class DetailCollectionViewController: UICollectionViewController, UICollectionVi
                 return
         }
         
-        guard let id = cell.marvelObject?.id, let indexPath = collectionView.indexPath(for: cell) else {
+        guard let marvelObject = cell.marvelObject, let indexPath = collectionView.indexPath(for: cell) else {
             return
         }
         
-        detailsViewController.marvelType = marvelType
-        detailsViewController.marvelObject = cell.marvelObject
+        detailsViewController.marvelObject = marvelObject
         detailsViewController.preDownloadedImage = cell.imageView?.image
-        detailsViewController.requestDetails(forId: id, atIndex: indexPath.row)
+        detailsViewController.requestDetails(atIndex: indexPath.row)
     }
     
     // MARK: - UICollectionViewDataSource
@@ -89,7 +83,7 @@ class DetailCollectionViewController: UICollectionViewController, UICollectionVi
     
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch marvelType {
+        switch marvelObject.type {
         case .comics:
             guard let comic = marvelObject as? Comic else {
                 return 0
@@ -98,7 +92,7 @@ class DetailCollectionViewController: UICollectionViewController, UICollectionVi
             return comic.creatorTotal ?? 0
             
         case .characters:
-            guard let character = marvelObject as? Character, let comics = character.details?.comics else {
+            guard let character = marvelObject as? Character, let comics = character.comics else {
                 return 0
             }
             return comics.count
@@ -113,7 +107,7 @@ class DetailCollectionViewController: UICollectionViewController, UICollectionVi
         }
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? MarvelCollectionViewCell else {
-            print("CollectionViewController > CellType for \(self.marvelType.rawValue) doesn't match MarvelCollectionViewCell.")
+            print("CollectionViewController > CellType for \(self.marvelObject.type.rawValue) doesn't match MarvelCollectionViewCell.")
             return collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
         }
         

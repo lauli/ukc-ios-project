@@ -37,14 +37,14 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "MarvelApp/DataHandling/DataManager.swift"
-            timestampString = "566278357.721323"
+            filePath = "MarvelApp/DetailsView/DetailViewController.swift"
+            timestampString = "566364217.5765899"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "96"
-            endingLineNumber = "96"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "178"
+            endingLineNumber = "178"
+            landmarkName = "updateDescriptionLabelConstraints()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -53,94 +53,46 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "MarvelApp/DataHandling/DataManager.swift"
-            timestampString = "566278357.722084"
+            filePath = "MarvelApp/DetailsView/DetailViewController.swift"
+            timestampString = "566364217.577105"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
-            landmarkName = "unknown"
-            landmarkType = "0">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MarvelApp/DataHandling/DataManager.swift"
-            timestampString = "566278357.7223589"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "182"
+            endingLineNumber = "182"
+            landmarkName = "updateDescriptionLabelConstraints()"
+            landmarkType = "7">
             <Locations>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "function signature specialization &lt;Arg[0] = Value Promoted from Box&gt; of closure #1 () -&gt; () in MarvelApp.DataManager.request(type: MarvelApp.Type, amountOfObjectsToRequest: Swift.Int, completion: (Swift.Int, Swift.Bool) -&gt; ()) -&gt; ()"
+                  symbolName = "MarvelApp.DetailViewController.(updateDescriptionLabelConstraints in _7A5A6AA9B8D39692CB86C7DFA06839DF)() -&gt; ()"
                   moduleName = "MarvelApp"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ls691/Desktop/master/ios/workshops/MarvelApp/MarvelApp/DataHandling/DataManager.swift"
-                  timestampString = "566278256.533224"
+                  urlString = "file:///Users/ls691/Desktop/master/ios/workshops/MarvelApp/MarvelApp/DetailsView/DetailViewController.swift"
+                  timestampString = "566364077.952917"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "78"
-                  endingLineNumber = "78"
-                  offsetFromSymbolStart = "184">
+                  startingLineNumber = "183"
+                  endingLineNumber = "183"
+                  offsetFromSymbolStart = "1856">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 () -&gt; () in MarvelApp.DataManager.request(type: MarvelApp.Type, amountOfObjectsToRequest: Swift.Int, completion: (Swift.Int, Swift.Bool) -&gt; ()) -&gt; ()"
+                  symbolName = "closure #2 (SnapKit.ConstraintMaker) -&gt; () in MarvelApp.DetailViewController.(updateDescriptionLabelConstraints in _7A5A6AA9B8D39692CB86C7DFA06839DF)() -&gt; ()"
                   moduleName = "MarvelApp"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ls691/Desktop/master/ios/workshops/MarvelApp/MarvelApp/DataHandling/DataManager.swift"
-                  timestampString = "566278256.535175"
+                  urlString = "file:///Users/ls691/Desktop/master/ios/workshops/MarvelApp/MarvelApp/DetailsView/DetailViewController.swift"
+                  timestampString = "566364077.954985"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "51"
-                  endingLineNumber = "51"
-                  offsetFromSymbolStart = "225">
+                  startingLineNumber = "184"
+                  endingLineNumber = "184"
+                  offsetFromSymbolStart = "44">
                </Location>
             </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MarvelApp/DataHandling/DataManager.swift"
-            timestampString = "566278357.722603"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97"
-            landmarkName = "unknown"
-            landmarkType = "0">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MarvelApp/DataHandling/DataManager.swift"
-            timestampString = "566278357.7228481"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
-            landmarkName = "unknown"
-            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

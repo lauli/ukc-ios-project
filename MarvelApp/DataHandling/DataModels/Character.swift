@@ -9,26 +9,10 @@
 import Foundation
 
 final class Character: MarvelObject {
+    var comicTotal: Int? // amount of comics this character appears in
+    var url: String? // url to all comics
     
-    // additional information
-    var details: Details? = nil
-    
-    init(id: Int, name: String, thumbnail: String?, additionalInfo: Details? = nil) {
-        super.init(id: id, name: name, thumbnail: thumbnail)
-        self.details = additionalInfo
-    }
-    
-    class Details {
-        var description: String?
-        var amountOfComics: Int? // amount of comics this character appears in
-        var comics: [String]? // name for first 20 comics, or less
-        var url: String? // url to all comics
-        
-        init(description: String? = nil, amountOfComics: Int? = nil, comics: [String]? = nil, url: String? = nil) {
-            self.description = description
-            self.amountOfComics = amountOfComics
-            self.comics = comics
-            self.url = url
-        }
+    init(id: Int, name: String, thumbnail: String?) {
+        super.init(type: .characters, id: id, name: name, thumbnail: thumbnail)
     }
 }

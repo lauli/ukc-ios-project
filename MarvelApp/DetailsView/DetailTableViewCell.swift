@@ -17,8 +17,7 @@ class DetailTableViewCell: UITableViewCell {
     @IBOutlet weak var informationLabel: UILabel!
     @IBOutlet weak var showMoreButton: UIButton!
     
-    var marvelType: Type = .characters
-    var marvelObject: MarvelObject?
+    var marvelObject: MarvelObject = MarvelObject(type: .characters, id: 0, name: "", thumbnail: "")
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -72,7 +71,7 @@ class DetailTableViewCell: UITableViewCell {
     
     func updateInformationOnLabels(byIndex index: Int = 0) {
         
-        switch marvelType {
+        switch marvelObject.type {
         case .comics:
             guard let comic = marvelObject as? Comic else {
                 return
@@ -95,15 +94,15 @@ class DetailTableViewCell: UITableViewCell {
             
 
         case .characters:
-            guard let character = marvelObject as? Character, let details = character.details else {
+            guard let character = marvelObject as? Character else {
                 return
             }
             
             // set title and amount
             titleLabel.text = "Number of Comic Appearances:"
-            amountLabel.text = "\(details.amountOfComics ?? 0)"
+            amountLabel.text = "\(character.comicTotal ?? 0)"
             
-            setupInformationLabel(for: details.comics ?? [String]())
+            setupInformationLabel(for: character.comics ?? [String]())
             
         default:
             titleLabel.text = ""
@@ -167,16 +166,4 @@ class DetailTableViewCell: UITableViewCell {
         informationLabel.text?.append("...")
     }
     
-}
-
-extension String {
-    func height(constraintedWidth width: CGFloat, font: UIFont) -> CGFloat {
-        let label =  UILabel(frame: CGRect(x: 0, y: 0, width: width, height: .greatestFiniteMagnitude))
-        label.numberOfLines = 0
-        label.text = self
-        label.font = font
-        label.sizeToFit()
-        
-        return label.frame.height
-    }
 }

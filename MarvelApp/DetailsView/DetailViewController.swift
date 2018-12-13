@@ -20,6 +20,7 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var tableViewContainer: UIView!
 
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var bottomLabel: UILabel!
     
     @IBOutlet weak var favButton: UIButton!
@@ -28,12 +29,8 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     private var isFav = false
     private var detailTableTableViewController: DetailTableViewController?
 
-    
-    var marvelType: Type = .characters
-    var marvelObject: MarvelObject?
+    var marvelObject: MarvelObject = MarvelObject(type: .characters, id: 0, name: "", thumbnail: "")
     var preDownloadedImage: UIImage?
-    
-    
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -62,36 +59,44 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         case let viewController as DetailTableViewController:
             detailTableTableViewController = viewController
             detailTableTableViewController?.marvelObject = marvelObject
-            detailTableTableViewController?.marvelType = marvelType
             
         default:
             break
         }
     }
     
-    func requestDetails(forId id: Int, atIndex index: Int) {
-        switch marvelType {
+    func requestDetails(atIndex index: Int) {
+        switch marvelObject.type {
         case .comics:
-            dataManager.requestComicDetails(forId: id, atIndex: index) { success in
+            dataManager.requestDetails(forObject: marvelObject as! Comic, atArrayIndex: index) { success in
                 if success {
                     print("CollectionViewController > Successfully requested Comic Details.")
-                    DispatchQueue.main.async {
-                        self.detailTableTableViewController?.reloadInputViews()
-                    }
+                    self.update()
                 }
             }
         case .characters:
-            dataManager.requestCharacterDetails(forId: id, atIndex: index) { success in
+            dataManager.requestDetails(forObject: marvelObject as! Character, atArrayIndex: index) { success in
                 if success {
                     print("CollectionViewController > Successfully requested Character Details.")
-                    DispatchQueue.main.async {
-                        self.detailTableTableViewController?.reloadInputViews()
-                    }
+                    self.update()
                 }
             }
             
-        default:
-            break
+        case .creators:
+            dataManager.requestDetails(forObject: marvelObject as! Creator, atArrayIndex: index) { success in
+                if success {
+                    print("CollectionViewController > Successfully requested Creator Details.")
+                    self.update()
+                }
+            }
+        }
+    }
+    
+    private func update() {
+        DispatchQueue.main.async {
+            self.descriptionLabel.text = self.marvelObject.description
+            self.updateDescriptionLabelConstraints()
+            self.detailTableTableViewController?.reloadInputViews()
         }
     }
     
@@ -129,17 +134,25 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         }
         
         titleLabel.snp.makeConstraints { make in
-            make.top.left.right.equalTo(informationContainer).inset(14)
+            make.top.left.equalTo(informationContainer).inset(14)
+            make.right.equalTo(informationContainer).inset(50)
             make.height.equalTo(titleLabel.optimalHeight)
         }
         
+        descriptionLabel.snp.makeConstraints { make in
+            make.left.right.equalTo(informationContainer).inset(14)
+            make.top.equalTo(titleLabel.snp.bottom)
+            make.height.equalTo(descriptionLabel.optimalHeight)
+        }
+        descriptionLabel.numberOfLines = 0
+        
         favButton.snp.makeConstraints { make in
-            make.top.right.equalTo(titleLabel)
+            make.top.right.equalTo(informationContainer).inset(14)
             make.width.height.equalTo(32)
         }
         
         tableViewContainer.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom)
+            make.top.equalTo(descriptionLabel.snp.bottom)
             make.left.right.equalTo(informationContainer)
             make.height.equalTo(400)
         }
@@ -152,22 +165,39 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         bottomLabel.isHidden = true
     }
     
-    private func setupCharacterLayout() {
-        guard let object = marvelObject else {
-            print("DetailViewController > setupCharacter() -> Couldn't cast object to the type Character.")
+    private func updateDescriptionLabelConstraints() {
+        guard let height = descriptionLabel.text?.height(constraintedWidth: descriptionLabel.bounds.width, font: descriptionLabel.font) else {
+            print("DetailViewController > Couldn't calculate height of description label.")
             return
         }
         
+        descriptionLabel.snp.makeConstraints { make in
+            make.left.right.equalTo(informationContainer).inset(14)
+            make.right.equalTo(informationContainer).inset(14)
+            make.top.equalTo(titleLabel.snp.bottom)
+            make.height.equalTo(Int(height) + 1)
+        }
+        descriptionLabel.numberOfLines = 0
+        
+        tableViewContainer.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(Int(height) + 20)
+            make.left.right.equalTo(descriptionLabel)
+            make.height.equalTo(400)
+        }
+    }
+    
+    private func setupCharacterLayout() {
         if let image = preDownloadedImage {
             // check if there the picture is already downloaded
             imageView.image = image
             
-        } else if let url = object.thumbnail {
+        } else if let url = marvelObject.thumbnail {
             // if not, check if there is an url, if not, leave the default image
             showPicture(forImageUrl: url)
         }
         
-        titleLabel.text = object.name
+        titleLabel.text = marvelObject.name
+        descriptionLabel.text = marvelObject.description
     }
     
     private func showPicture(forImageUrl url: String) {
@@ -184,14 +214,14 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         var imageName = "fav-empty"
         favButton.setTitle("", for: .normal)
         
-        guard let favs = UserDefaults.standard.array(forKey: "\(marvelType.rawValue)FavId") as? [Int] else {
+        guard let favs = UserDefaults.standard.array(forKey: "\(marvelObject.type.rawValue)FavId") as? [Int] else {
             favButton.setBackgroundImage(UIImage(named: imageName), for: .normal)
             return
         }
         
         
         for id in favs {
-            if id == marvelObject?.id {
+            if id == marvelObject.id {
                 imageName = "fav-full"
                 isFav = true
             }
@@ -201,21 +231,21 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @IBAction func favButtonTapped(_ sender: Any) {
-        if UserDefaults.standard.array(forKey: "\(marvelType.rawValue)FavId") == nil {
-            UserDefaults.standard.set([marvelObject?.id], forKey: "\(marvelType.rawValue)FavId")
+        if UserDefaults.standard.array(forKey: "\(marvelObject.type.rawValue)FavId") == nil {
+            UserDefaults.standard.set([marvelObject.id], forKey: "\(marvelObject.type.rawValue)FavId")
         }
         
-        var favs = UserDefaults.standard.array(forKey: "\(marvelType.rawValue)FavId") as! [Int]
+        var favs = UserDefaults.standard.array(forKey: "\(marvelObject.type.rawValue)FavId") as! [Int]
         
         if isFav {
-            let newFavs = favs.filter {$0 != marvelObject?.id}
-            UserDefaults.standard.set(newFavs, forKey: "\(marvelType.rawValue)FavId")
+            let newFavs = favs.filter {$0 != marvelObject.id}
+            UserDefaults.standard.set(newFavs, forKey: "\(marvelObject.type.rawValue)FavId")
             
             favButton.setBackgroundImage(UIImage(named: "fav-empty"), for: .normal)
         
-        } else if let marvelObject = marvelObject {
+        } else {
             favs.append(marvelObject.id)
-            UserDefaults.standard.set(favs, forKey: "\(marvelType.rawValue)FavId")
+            UserDefaults.standard.set(favs, forKey: "\(marvelObject.type.rawValue)FavId")
             
             favButton.setBackgroundImage(UIImage(named: "fav-full"), for: .normal)
         }

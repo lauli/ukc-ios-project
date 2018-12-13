@@ -9,16 +9,10 @@
 import UIKit
 
 final class Creator: MarvelObject {
+    var suffix: String? = nil
+    var comicTotal: Int? // amount of comics this character appears in
     
-    var suffix: String?
-    var urls: [String]?
-    
-    init(id: Int, name: String, thumbnail: String?,
-         suffix: String? = nil, urls: [String]? = nil  ) {
-        
-        super.init(id: id, name: name, thumbnail: thumbnail)
-        
-        self.suffix = suffix
-        self.urls = urls
+    init(id: Int, name: String, thumbnail: String?) {
+        super.init(type: .creators, id: id, name: name, thumbnail: thumbnail)
     }
 }

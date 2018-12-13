@@ -9,25 +9,10 @@
 import Foundation
 
 final class Comic: MarvelObject {
-    
-    // additional information
-    var description, format: String?
+    var format: String?
     var characterTotal, creatorTotal, issueNumber, pages, price: Int? // TODO: prices is an own class. do i want to implement this as well?
-    var creators: [String]? // id for creators
-    var characters: [String]? // id for characters
     
-    init(id: Int, name: String, thumbnail: String? = nil,
-         description: String? = nil, format: String? = nil,
-         issueNumber: Int? = nil, pages: Int? = nil, price: Int? = nil,
-         creators: [String]? = nil, characters: [String]? = nil) {
-        
-        super.init(id: id, name: name, thumbnail: thumbnail)
-        self.description = description
-        self.format = format
-        self.issueNumber = issueNumber
-        self.pages = pages
-        self.price = price
-        self.creators = creators
-        self.characters = characters
+    init(id: Int, name: String, thumbnail: String?) {
+        super.init(type: .comics, id: id, name: name, thumbnail: thumbnail)
     }
 }
