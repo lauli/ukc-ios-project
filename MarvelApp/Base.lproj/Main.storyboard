@@ -117,7 +117,7 @@
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="DIb-zs-eSq" customClass="DetailViewController" customModule="MarvelApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="oXj-PW-zHX">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="441"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZDO-C1-mmK">
@@ -370,7 +370,7 @@
             <objects>
                 <collectionViewController storyboardIdentifier="DetailCollectionViewController" id="SPO-JY-62c" customClass="CollectionViewController" customModule="MarvelApp" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" restorationIdentifier="DetailCell" dataMode="prototypes" id="NlM-Qf-a7i">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="441"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="0iO-Wc-9Rs">
@@ -430,7 +430,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FkU-eM-yIM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4786" y="185"/>
+            <point key="canvasLocation" x="6580" y="1221"/>
         </scene>
         <!--Favs-->
         <scene sceneID="fnf-Sb-8Gj">
@@ -499,7 +499,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DSK-zu-ZLm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1341.5999999999999" y="184.85757121439281"/>
+            <point key="canvasLocation" x="1366" y="185"/>
         </scene>
         <!--Search-->
         <scene sceneID="Rnx-1q-Uhc">
@@ -512,10 +512,65 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="1eS-gm-ORZ" kind="relationship" relationship="rootViewController" id="RLr-H1-tFt"/>
+                    </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wwz-6p-Dvk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="388" y="1699"/>
+        </scene>
+        <!--Stored Favorites-->
+        <scene sceneID="xFk-JY-cUg">
+            <objects>
+                <viewController title="Stored Favorites" id="1eS-gm-ORZ" customClass="SearchViewController" customModule="MarvelApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="maH-zp-q0f">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pcH-4d-AqW">
+                                <rect key="frame" x="0.0" y="64" width="375" height="56"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cqh-Cw-y4L">
+                                <rect key="frame" x="17" y="139" width="44" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Comic"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y08-2J-rvo">
+                                <rect key="frame" x="153" y="139" width="68" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Character"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Na-ua-fzx">
+                                <rect key="frame" x="310" y="139" width="52" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Creator"/>
+                            </button>
+                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="je3-vi-nE3">
+                                <rect key="frame" x="0.0" y="177" width="375" height="441"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <connections>
+                                    <segue destination="SPO-JY-62c" kind="embed" id="iiO-fT-tAI"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="Dl0-Xe-e0t"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Search" id="DMI-rY-MTl"/>
+                    <connections>
+                        <outlet property="characterButton" destination="y08-2J-rvo" id="euP-fp-Sa0"/>
+                        <outlet property="collectionViewContainer" destination="je3-vi-nE3" id="whS-no-CU3"/>
+                        <outlet property="comicButton" destination="Cqh-Cw-y4L" id="5rP-wi-Xsa"/>
+                        <outlet property="creatorButton" destination="1Na-ua-fzx" id="KMc-pW-liF"/>
+                        <outlet property="searchBar" destination="pcH-4d-AqW" id="SaR-YZ-rRm"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Cjq-gs-KhV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1365.5999999999999" y="1698.8005997001501"/>
         </scene>
     </scenes>
     <resources>
@@ -528,7 +583,7 @@
         <image name="marvel" width="51.200000762939453" height="51.200000762939453"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="MNz-wh-kik"/>
+        <segue reference="iiO-fT-tAI"/>
         <segue reference="E8c-tC-rBL"/>
         <segue reference="zaU-PH-7Cg"/>
     </inferredMetricsTieBreakers>

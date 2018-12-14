@@ -331,11 +331,17 @@ final class DataManager {
         
         let dataTask = URLSession.shared.dataTask(with: encodedURL) { data, response, error in
             
-            guard let object = self.decoder.dataToResult(data: data) as? [String: Any],
-                let marvelObject = self.decoder.basicObjectInformation(fromJSON: object, forType: type) else {
-                    print("DataManger > decodeBasicData -> Couldn't retrieve exact data from JSON.")
-                    completion(nil, false)
-                    return
+            guard let results = self.decoder.dataToResult(data: data) else {
+                print("DataManger > decodeBasicData -> Couldn't retrieve data from JSON.")
+                completion(nil, false)
+                return
+            }
+            
+            for result in results {
+                guard let object = result as? [String: Any], let marvelObject = self.decoder.basicObjectInformation(fromJSON: object, forType: type) else {
+                print("DataManger > decodeBasicData -> Couldn't retrieve data from JSON result.")
+                completion(nil, false)
+                return
             }
             
             switch type {
@@ -347,7 +353,8 @@ final class DataManager {
                 completion(Creator(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail), true)
             }
         }
-        
+    }
+    
         dataTask.resume()
     }
     

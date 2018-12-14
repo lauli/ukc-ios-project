@@ -45,7 +45,7 @@ final class Decoder {
         }
     }
     
-    func dataToResult(data: Data?) -> Any? {
+    func dataToResult(data: Data?) -> [Any]? {
         guard let data = data else {
             print("DataManger > Couldn't fetch data from URL.")
             return nil
@@ -56,7 +56,7 @@ final class Decoder {
             return nil
         }
         
-        return results.first
+        return results
     }
     
     func basicObjectInformation(fromJSON json: [String: Any], forType type: Type) -> MarvelObject? {
