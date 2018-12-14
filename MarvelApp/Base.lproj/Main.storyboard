@@ -343,6 +343,11 @@
                                     <segue destination="Ggb-fH-jvo" kind="embed" identifier="CreatorsSegue" id="wjp-nh-L66"/>
                                 </connections>
                             </containerView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="6kv-ha-Pj6">
+                                <rect key="frame" x="177" y="323" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="ctQ-28-DgV"/>
@@ -365,7 +370,7 @@
             <objects>
                 <collectionViewController storyboardIdentifier="DetailCollectionViewController" id="SPO-JY-62c" customClass="CollectionViewController" customModule="MarvelApp" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" restorationIdentifier="DetailCell" dataMode="prototypes" id="NlM-Qf-a7i">
-                        <rect key="frame" x="0.0" y="0.0" width="343" height="204"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="0iO-Wc-9Rs">
@@ -523,7 +528,7 @@
         <image name="marvel" width="51.200000762939453" height="51.200000762939453"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="y4s-47-j77"/>
+        <segue reference="MNz-wh-kik"/>
         <segue reference="E8c-tC-rBL"/>
         <segue reference="zaU-PH-7Cg"/>
     </inferredMetricsTieBreakers>

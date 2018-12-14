@@ -83,13 +83,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		9B2EBF94219F26BD005723DD /* CollectionView */ = {
+		9B2EBF94219F26BD005723DD /* Marvel */ = {
 			isa = PBXGroup;
 			children = (
 				9B4AC31F219B80B800BFF6F9 /* MarvelCollectionViewController.swift */,
 				9B4AC321219BA76200BFF6F9 /* MarvelCollectionViewCell.swift */,
 			);
-			path = CollectionView;
+			path = Marvel;
 			sourceTree = "<group>";
 		};
 		9B4AB96421C20D4B00018F15 /* Favorites */ = {
@@ -123,7 +123,8 @@
 			children = (
 				9B4AB96421C20D4B00018F15 /* Favorites */,
 				9B4AC323219BAD7C00BFF6F9 /* PageViewController.swift */,
-				9B2EBF94219F26BD005723DD /* CollectionView */,
+				9BC50B7E21BF366500A42C0F /* CollectionViewController.swift */,
+				9B2EBF94219F26BD005723DD /* Marvel */,
 				9BB5E4AA219F15C600FB38D0 /* DetailsView */,
 				9B4AC31A219B72CD00BFF6F9 /* DataHandling */,
 				9B4AC310219B65AD00BFF6F9 /* MarvelApp-Bridging-Header.h */,
@@ -167,7 +168,6 @@
 				9B4AC30A219AEDFD00BFF6F9 /* DetailViewController.swift */,
 				9BB5E4A8219F15C200FB38D0 /* DetailTableViewController.swift */,
 				9B2EBF95219F28B0005723DD /* DetailTableViewCell.swift */,
-				9BC50B7E21BF366500A42C0F /* CollectionViewController.swift */,
 			);
 			path = DetailsView;
 			sourceTree = "<group>";

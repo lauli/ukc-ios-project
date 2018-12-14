@@ -8,8 +8,16 @@
 
 import Foundation
 
-class MarvelObject {
+class MarvelObject: Hashable {
     
+    static func == (lhs: MarvelObject, rhs: MarvelObject) -> Bool {
+        return lhs.name < rhs.name
+    }
+    
+    var hashValue: Int {
+        return ObjectIdentifier(self).hashValue
+    }
+
     // must haves
     let type: Type
     let id: Int
