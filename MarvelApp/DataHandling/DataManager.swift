@@ -123,22 +123,11 @@ final class DataManager {
             return
         }
         
-        let nameKey: String
-        
-        switch type {
-        case .comics:
-            nameKey = "title"
-        case .characters:
-            nameKey = "name"
-        case .creators:
-            nameKey = "fullName"
-        }
-        
         for result in results {
             guard let object = result as? [String: Any], let marvelObject = self.decoder.basicObjectInformation(fromJSON: object, forType: type) else {
-                    print("DataManger > decodeBasicData -> Couldn't retrieve exact data from JSON.")
-                    completion(false)
-                    return
+                print("DataManger > decodeBasicData -> Couldn't retrieve exact data from JSON.")
+                completion(false)
+                return
             }
             if marvelObject.thumbnail == "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" {
                 // the database doesn't have a picture, therefore we wanna skip the object
@@ -223,7 +212,7 @@ final class DataManager {
                         self.characters[index].name == name {
                         self.characters[index] = newObject
                     }
-                
+                    
                 case .creators:
                     if let (name, newObject) = self.decoder.creatorDetails(fromJSON: json, addToOldObject: object as! Creator),
                         self.creators[index].name == name {
@@ -241,88 +230,77 @@ final class DataManager {
     
     
     
-
+    
     
     
     // MARK: -Request Data from Detailobjects for DetailCollectionView
     
     func requestDataForDetailCollectionView(about type: Type, from marvelObject: MarvelObject, completion: @escaping DetailArrayData) {
-        var counter = 1
+        
+        var array: [MarvelObject]
         
         switch type {
         case .comics:
-            guard let comicNames = marvelObject.comics else {
-                completion(nil, false)
-                return
-            }
-            
-            var returnedComics = [Comic]()
-            
-            for comicName in comicNames {
-                searchForType(.comics, name: comicName) { returnedValue, success in
-                    counter += 1
-                    
-                    if success, let comic = returnedValue as? Comic {
-                        returnedComics.append(comic)
-                    }
-                    
-                    if counter == comicNames.count {
-                        completion(returnedComics, true)
+            array = [Comic]()
+        case .characters:
+            array = [Character]()
+        case .creators:
+            array = [Creator]()
+        }
+        
+        switch type {
+        case .comics:
+            if let comicNames = marvelObject.comics {
+                for comicName in comicNames {
+                    search(forType: .comics, byName: comicName) { returnedValue, success in
+                        if success, let comic = returnedValue as? Comic {
+                            array.append(comic)
+                        }
+                        completion(array, true)
                     }
                 }
+            } else {
+                completion(nil, false)
+                return
             }
             
         case .characters:
-            guard let characterNames = marvelObject.characters else {
-                completion(nil, false)
-                return
-            }
-            
-            var returnedCharacters = [Character]()
-            
-            for characterName in characterNames {
-                searchForType(.comics, name: characterName) { returnedValue, success in
-                    counter += 1
-                    
-                    if success, let comic = returnedValue as? Character {
-                        returnedCharacters.append(comic)
-                    }
-                    
-                    if counter == characterName.count {
-                        completion(returnedCharacters, true)
+            if let characterNames = marvelObject.characters {
+                for characterName in characterNames {
+                    search(forType: .characters, byName: characterName) { returnedValue, success in
+                        if success, let comic = returnedValue as? Character {
+                            array.append(comic)
+                        }
+                        completion(array, true)
                     }
                 }
+            } else {
+                completion(nil, false)
+                return
             }
             
         case .creators:
-            guard let creatorNames = marvelObject.creators else {
-                completion(nil, false)
-                return
-            }
-            
-            var returnedCreators = [Creator]()
-            
-            for creatorName in creatorNames {
-                searchForType(.creators, name: creatorName) { returnedValue, success in
-                    counter += 1
-                    
-                    if success, let creator = returnedValue as? Creator {
-                        returnedCreators.append(creator)
-                    }
-                    
-                    if counter == creatorName.count {
-                        completion(returnedCreators, true)
+            if let creatorNames = marvelObject.creators {
+                for creatorName in creatorNames {
+                    search(forType: .creators, byName: creatorName) { returnedValue, success in
+                        if success, let comic = returnedValue as? Creator {
+                            array.append(comic)
+                        }
+                        completion(array, true)
                     }
                 }
+            } else {
+                completion(nil, false)
+                return
             }
         }
     }
     
-    private func searchForType(_ type: Type, name: String, completion: @escaping SearchData) {
+    private func search(forType type: Type, byName name: String, completion: @escaping SearchData) {
         // check if name needs to be converted to utf-8
         guard let encodedName = name.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed) else {
-                completion(nil, false)
-                return
+            completion(nil, false)
+            return
         }
         
         let nameKey: String
@@ -349,56 +327,83 @@ final class DataManager {
         }
         
         let dataTask = URLSession.shared.dataTask(with: encodedURL) { data, response, error in
-            guard let data = data else {
-                print("DataManger > Couldn't fetch data from URL.")
-                print(error?.localizedDescription as Any)
-                completion(nil, false)
-                return
-            }
             
-            guard let (resultsArray, _) = self.decoder.results(forData: data) else {
-                completion(nil, false)
-                return
-            }
-            
-            guard let results = resultsArray as? [Any] else {
-                completion(nil, false)
-                return
-            }
-            
-            let nameKey: String
-            
-            switch type {
-            case .comics:
-                nameKey = "title"
-            case .characters:
-                nameKey = "name"
-            case .creators:
-                nameKey = "fullName"
-            }
-            
-            guard let object = results.first as? [String: Any],
-                let id = object["id"] as? Int,
-                let name = object["\(nameKey)"] as? String,
-                let thumbnailInfo = object["thumbnail"] as? [String: String],
-                let imagePath = thumbnailInfo["path"],
-                let imageExtension = thumbnailInfo["extension"] else {
-                    print("DataManger > decodeData() -> Couldn't retrieve exact data from JSON.")
+            guard let object = self.decoder.dataToResult(data: data) as? [String: Any],
+                let marvelObject = self.decoder.basicObjectInformation(fromJSON: object, forType: type) else {
+                    print("DataManger > decodeBasicData -> Couldn't retrieve exact data from JSON.")
                     completion(nil, false)
                     return
             }
-
-            let imageUrl = imagePath + "." + imageExtension
             
             switch type {
             case .comics:
-                completion(Comic(id: id, name: name, thumbnail: imageUrl), true)
+                completion(Comic(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail), true)
             case .characters:
-                completion(Character(id: id, name: name, thumbnail: imageUrl), true)
+                completion(Character(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail), true)
             case .creators:
-                completion(Creator(id: id, name: name, thumbnail: imageUrl), true)
+                completion(Creator(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail), true)
+            }
+        }
+        
+        dataTask.resume()
+    }
+    
+    // MARK: -Request Data from Favorites for DetailCollectionView
+    
+    func requestDataForDetailCollectionView(about type: Type, byIds ids: [Int], completion: @escaping DetailArrayData) {
+        var array: [MarvelObject]
+        
+        switch type {
+        case .comics:
+            array = [Comic]()
+        case .characters:
+            array = [Character]()
+        case .creators:
+            array = [Creator]()
+        }
+        
+        for id in ids {
+            search(forType: type, byId: id) { returnedValue, success in
+                if success, let value = returnedValue {
+                    array.append(value)
+                }
+                completion(array, true)
+            }
+        }
+        
+    }
+    
+    private func search(forType type: Type, byId id: Int, completion: @escaping SearchData) {
+        
+        var url = "https://gateway.marvel.com:443/v1/public/"
+        url.append("\(type.rawValue)/")
+        url.append("\(id)?")
+        url.append("&ts=\(timeStamp)")
+        url.append("&apikey=" + apiKey)
+        url.append("&hash=" + hash)
+        
+        guard let encodedURL = URL(string: url) else {
+            completion(nil, false)
+            return
+        }
+        
+        let dataTask = URLSession.shared.dataTask(with: encodedURL) { data, response, error in
+            
+            guard let object = self.decoder.dataToResult(data: data) as? [String: Any],
+                let marvelObject = self.decoder.basicObjectInformation(fromJSON: object, forType: type) else {
+                    print("DataManger > decodeBasicData -> Couldn't retrieve exact data from JSON.")
+                    completion(nil, false)
+                    return
             }
             
+            switch type {
+            case .comics:
+                completion(Comic(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail), true)
+            case .characters:
+                completion(Character(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail), true)
+            case .creators:
+                completion(Creator(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail), true)
+            }
         }
         
         dataTask.resume()

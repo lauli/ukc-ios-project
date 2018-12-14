@@ -17,6 +17,8 @@ class FavoritesViewController: UIViewController {
     @IBOutlet weak var imageCreators: UIImageView!
     
     private var idsOfObjectsToBeShown = [Int]()
+    private var typeToBeShown: Type = .characters
+    private let destinationViewController = "DetailCollectionViewController"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,31 +68,31 @@ class FavoritesViewController: UIViewController {
     }
     
     @objc private func imageComicsTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-        
+        typeToBeShown = .comics
+        showCollectionView()
     }
     
     @objc private func imageCharactersTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-        guard let favs = UserDefaults.standard.array(forKey: "\(Type.characters.rawValue)FavId") as? [Int] else {
-            // TODO: maybe show error message because they haven't stored any yet
-            return
-        }
-        
-        idsOfObjectsToBeShown = favs
+        typeToBeShown = .characters
+        showCollectionView()
     }
     
     @objc private func imageCreatorsTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-        
+        typeToBeShown = .creators
+        showCollectionView()
     }
     
-
-    /*
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    private func showCollectionView() {
+        performSegue(withIdentifier: "showCollectionViewForFavs", sender: self)
     }
-    */
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let collectionViewController = segue.destination as? CollectionViewController else {
+            return
+        }
+        collectionViewController.requestFavoriteData(forType: typeToBeShown)
+    }
 
 }

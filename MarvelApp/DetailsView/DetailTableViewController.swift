@@ -54,7 +54,7 @@ class DetailTableViewController: UITableViewController {
     // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let detailCollectionViewController = segue.destination as? DetailCollectionViewController else {
+        guard let detailCollectionViewController = segue.destination as? CollectionViewController else {
                 return
         }
         
@@ -68,7 +68,7 @@ class DetailTableViewController: UITableViewController {
             return
         }
 
-        if cell.showMoreButton.isHidden {
+        if cell.informationLabel.isHidden {
             cell.showInformationLabel(true)
         } else {
             cell.showInformationLabel(false)

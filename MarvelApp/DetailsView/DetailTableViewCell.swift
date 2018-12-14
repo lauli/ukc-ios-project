@@ -30,11 +30,9 @@ class DetailTableViewCell: UITableViewCell {
     
     private func setupLayout() {
         
-        setupContentConstraints(height: 50)
-        
         titleLabel.snp.makeConstraints { make in
             make.left.equalTo(contentView).offset(20)
-            make.top.equalTo(contentView)
+            make.top.equalTo(contentView).offset(20)
         }
         
         arrowButton.snp.makeConstraints { make in
@@ -79,7 +77,7 @@ class DetailTableViewCell: UITableViewCell {
             
             switch index {
             case 0:
-                titleLabel.text = "Character appearances:"
+                titleLabel.text = "Character Appearances:"
                 amountLabel.text = "\(comic.characterTotal ?? 0)"
                 setupInformationLabel(for: comic.characters ?? [String]())
                 
@@ -94,18 +92,23 @@ class DetailTableViewCell: UITableViewCell {
             
 
         case .characters:
-            guard let character = marvelObject as? Character else {
-                return
+            if let character = marvelObject as? Character {
+                titleLabel.text = "Comic Appearances:"
+                amountLabel.text = "\(character.comicTotal ?? 0)"
+                setupInformationLabel(for: character.comics ?? [String]())
             }
             
-            // set title and amount
-            titleLabel.text = "Number of Comic Appearances:"
-            amountLabel.text = "\(character.comicTotal ?? 0)"
             
-            setupInformationLabel(for: character.comics ?? [String]())
-            
-        default:
-            titleLabel.text = ""
+        case .creators:
+            if let creator = marvelObject as? Creator {
+                titleLabel.text = "Comic Involvements:"
+                amountLabel.text = "\(creator.comicTotal ?? 0)"
+                setupInformationLabel(for: creator.comics ?? [String]())
+            }
+        }
+        
+        if amountLabel.text == "0" {
+            arrowButton.isHidden = true
         }
         
     }
@@ -113,7 +116,7 @@ class DetailTableViewCell: UITableViewCell {
     func showInformationLabel(_ show: Bool) {
         if show {
             informationLabel.isHidden = false
-            showMoreButton.isHidden = false
+            showMoreButton.isHidden = titleLabel.text == "Creators involved:" ? false : true
             arrowButton.setBackgroundImage(UIImage(named: "arrow-up"), for: .normal)
             
         } else {
@@ -128,8 +131,8 @@ class DetailTableViewCell: UITableViewCell {
     private func resetHeightForContentView() {
         let height: CGFloat
         
-        if showMoreButton.isHidden {
-            height = titleLabel.bounds.size.height + 30
+        if informationLabel.isHidden {
+            height = titleLabel.bounds.size.height + 30 + 40
         
         } else {
             let informationLabelHeight = informationLabel.text?.height(constraintedWidth: informationLabel.bounds.width,
@@ -159,9 +162,10 @@ class DetailTableViewCell: UITableViewCell {
             return
         }
         
-        informationLabel.text = (array.first ?? "") + ","
+        informationLabel.text = ""
+        
         for value in array {
-            informationLabel.text?.append(" \(value),")
+            informationLabel.text?.append("\(value), ")
         }
         informationLabel.text?.append("...")
     }

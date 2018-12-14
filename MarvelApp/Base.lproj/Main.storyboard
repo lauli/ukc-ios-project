@@ -48,7 +48,7 @@
         <!--Superheroes-->
         <scene sceneID="s3F-8h-BcU">
             <objects>
-                <collectionViewController title="Superheroes" id="Ggb-fH-jvo" customClass="CollectionViewController" customModule="MarvelApp" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController title="Superheroes" id="Ggb-fH-jvo" customClass="MarvelCollectionViewController" customModule="MarvelApp" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="0It-hM-T4Y">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="512"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -274,7 +274,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="igy-0J-0s2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4245.6000000000004" y="935.53223388305855"/>
+            <point key="canvasLocation" x="4050" y="1115"/>
         </scene>
         <!--Marvel-->
         <scene sceneID="m0C-KE-UT0">
@@ -363,7 +363,7 @@
         <!--Superheroes-->
         <scene sceneID="0k6-cr-jaf">
             <objects>
-                <collectionViewController id="SPO-JY-62c" customClass="DetailCollectionViewController" customModule="MarvelApp" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="DetailCollectionViewController" id="SPO-JY-62c" customClass="CollectionViewController" customModule="MarvelApp" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" restorationIdentifier="DetailCell" dataMode="prototypes" id="NlM-Qf-a7i">
                         <rect key="frame" x="0.0" y="0.0" width="343" height="204"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -425,7 +425,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FkU-eM-yIM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5159" y="936"/>
+            <point key="canvasLocation" x="4786" y="185"/>
         </scene>
         <!--Favs-->
         <scene sceneID="fnf-Sb-8Gj">
@@ -489,6 +489,7 @@
                         <outlet property="imageCharacters" destination="sWC-Td-5vq" id="dcS-2R-1G6"/>
                         <outlet property="imageComics" destination="vF3-Yq-oeg" id="5qU-N7-CJN"/>
                         <outlet property="imageCreators" destination="NjL-sk-cXy" id="pJs-au-Ohs"/>
+                        <segue destination="SPO-JY-62c" kind="show" identifier="showCollectionViewForFavs" id="MNz-wh-kik"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DSK-zu-ZLm" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -522,7 +523,8 @@
         <image name="marvel" width="51.200000762939453" height="51.200000762939453"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="y4s-47-j77"/>
         <segue reference="E8c-tC-rBL"/>
-        <segue reference="wjp-nh-L66"/>
+        <segue reference="zaU-PH-7Cg"/>
     </inferredMetricsTieBreakers>
 </document>

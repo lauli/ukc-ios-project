@@ -77,7 +77,7 @@ class PageViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let collectionViewController = segue.destination as? CollectionViewController else {
+        guard let collectionViewController = segue.destination as? MarvelCollectionViewController else {
             return
         }
         

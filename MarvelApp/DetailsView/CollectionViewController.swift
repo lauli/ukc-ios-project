@@ -1,5 +1,5 @@
 //
-//  DetailCollectionViewController.swift
+//  CollectionViewController.swift
 //  MarvelApp
 //
 //  Created by Laureen Schausberger on 11/12/2018.
@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class DetailCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class CollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     private let dataManager = DataManager.shared
     
@@ -23,8 +23,20 @@ class DetailCollectionViewController: UICollectionViewController, UICollectionVi
         }
     }
     
-    var marvelObject: MarvelObject = MarvelObject(type: .characters, id: 0, name: "", thumbnail: "")
+    private var isFavoriteCollectionView = false
+    private var favoriteType: Type = .characters
     
+    private var favoriteIds: [Int]? {
+        if let favs = UserDefaults.standard.array(forKey: "\(favoriteType.rawValue)FavId") as? [Int] {
+            return Array(Set(favs)).sorted()
+        
+        } else {
+            // TODO: maybe show error message because they haven't stored any yet
+            return nil
+        }
+    }
+
+    var marvelObject: MarvelObject = MarvelObject(type: .characters, id: 0, name: "", thumbnail: "")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +47,17 @@ class DetailCollectionViewController: UICollectionViewController, UICollectionVi
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        if isFavoriteCollectionView {
+            self.requestFavoriteData(forType: favoriteType)
+        }
+    }
+    
+    /**
+     * ONLY for collectionview that is triggered by detailviewcontroller
+     */
     func requestData() {
         
         let requestType: Type
@@ -51,6 +74,22 @@ class DetailCollectionViewController: UICollectionViewController, UICollectionVi
         dataManager.requestDataForDetailCollectionView(about: requestType, from: marvelObject) { values, success in
             if success {
                 print("DetailCollectionViewController > Successfully downloaded DataForDetailCollectionView for \(self.marvelObject.type.rawValue).")
+                
+                self.objectsToShow = values
+            }
+        }
+    }
+    
+    /**
+     * ONLY for collectionview that is triggered by favorite tab
+     */
+    func requestFavoriteData(forType type: Type) {
+        isFavoriteCollectionView = true
+        favoriteType = type
+        
+        dataManager.requestDataForDetailCollectionView(about: type, byIds: favoriteIds ?? [0]) { values, success in
+            if success {
+                print("DetailCollectionViewController > Successfully downloaded DataForDetailCollectionView for \(type.rawValue).")
                 
                 self.objectsToShow = values
             }
@@ -83,6 +122,13 @@ class DetailCollectionViewController: UICollectionViewController, UICollectionVi
     
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        // if collectionView is shown by favorite tab
+        if isFavoriteCollectionView, let amountToShow = favoriteIds?.count {
+            return amountToShow
+        }
+        
+        // if collectionView is shown by marvel data or search tab
         switch marvelObject.type {
         case .comics:
             guard let comic = marvelObject as? Comic else {

@@ -1,5 +1,5 @@
 //
-//  CollectionViewController.swift
+//  MarvelCollectionViewController.swift
 //  MarvelApp
 //
 //  Created by Laureen Schausberger on 13/11/2018.
@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class CollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSourcePrefetching {
+class MarvelCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSourcePrefetching {
     
     private let dataManager = DataManager.shared
     
@@ -120,7 +120,7 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
 
 }
 
-extension CollectionViewController {
+extension MarvelCollectionViewController {
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         if indexPaths.contains(where: isLoadingCell) {
