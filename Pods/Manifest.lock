@@ -1,16 +1,20 @@
 PODS:
+  - ReachabilitySwift (4.3.0)
   - SnapKit (4.0.1)
 
 DEPENDENCIES:
+  - ReachabilitySwift
   - SnapKit (~> 4.0.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - ReachabilitySwift
     - SnapKit
 
 SPEC CHECKSUMS:
+  ReachabilitySwift: 408477d1b6ed9779dba301953171e017c31241f3
   SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
 
-PODFILE CHECKSUM: ab36526c9548185023a397c6817e8461897e16fa
+PODFILE CHECKSUM: 1833b3eddf7ee53ca4fcc4b21fe3a4c1782a4274
 
 COCOAPODS: 1.5.3

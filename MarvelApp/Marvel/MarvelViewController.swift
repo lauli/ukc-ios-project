@@ -22,7 +22,6 @@ class MarvelViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Marvel Database"
-        indicatorView.startAnimating()
         setupLayout()
     }
     
