@@ -12,6 +12,11 @@ final class FavoriteCollectionViewController: CollectionViewController {
     
     private var favoriteType: Type = .characters
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationItem.title = "Favorite \(favoriteType.rawValue.capitalizingFirstLetter())"
+    }
+    
     private var favoriteIds: [Int]? {
         if let favs = UserDefaults.standard.array(forKey: "\(favoriteType.rawValue)FavId") as? [Int] {
             return Array(Set(favs)).sorted()

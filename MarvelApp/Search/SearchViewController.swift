@@ -24,9 +24,10 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "Search"
+            
         searchBar.delegate = self
         collectionViewContainer.isHidden = false
-        
         setupLayout()
         // Do any additional setup after loading the view.
     }

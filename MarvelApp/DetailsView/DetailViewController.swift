@@ -39,6 +39,8 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationItem.title = marvelObject.name
+        
         setupLayout()
         setupCharacterLayout()
         setupFavButton()

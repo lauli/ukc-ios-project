@@ -184,7 +184,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="YHB-P3-H5m"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Detail View Controller" id="IIF-LW-fTU"/>
+                    <navigationItem key="navigationItem" id="IIF-LW-fTU"/>
                     <connections>
                         <outlet property="bottomLabel" destination="arv-3R-fFI" id="nW8-xb-RWa"/>
                         <outlet property="descriptionLabel" destination="GFk-Jf-aID" id="bgl-ey-QLs"/>
@@ -298,7 +298,7 @@
         <!--Mervel Database-->
         <scene sceneID="EAn-9z-rg2">
             <objects>
-                <viewController title="Mervel Database" id="Dpv-l5-sTH" customClass="PageViewController" customModule="MarvelApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Mervel Database" id="Dpv-l5-sTH" customClass="MarvelViewController" customModule="MarvelApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Bei-8e-DSn">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -343,11 +343,6 @@
                                     <segue destination="Ggb-fH-jvo" kind="embed" identifier="CreatorsSegue" id="wjp-nh-L66"/>
                                 </connections>
                             </containerView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="6kv-ha-Pj6">
-                                <rect key="frame" x="177" y="323" width="20" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="ctQ-28-DgV"/>
@@ -673,7 +668,7 @@
             </objects>
             <point key="canvasLocation" x="2361" y="1699"/>
         </scene>
-        <!--Superheroes-->
+        <!--Favorite Collection View Controller-->
         <scene sceneID="LYK-eA-b6x">
             <objects>
                 <collectionViewController storyboardIdentifier="FavoriteCollectionViewController" id="wnD-gx-qPl" customClass="FavoriteCollectionViewController" customModule="MarvelApp" customModuleProvider="target" sceneMemberID="viewController">
@@ -734,7 +729,7 @@
                             <outlet property="delegate" destination="wnD-gx-qPl" id="ab0-wv-eNL"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" title="Superheroes" id="v7A-V7-kRR"/>
+                    <navigationItem key="navigationItem" id="v7A-V7-kRR"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fLt-Yu-XEP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -751,7 +746,7 @@
         <image name="marvel" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="E8c-tC-rBL"/>
+        <segue reference="VMm-Fp-bjq"/>
         <segue reference="zaU-PH-7Cg"/>
     </inferredMetricsTieBreakers>
 </document>

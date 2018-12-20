@@ -55,4 +55,8 @@ extension String {
         let text = String(data: messageData!, encoding: .utf8)!
         return text
     }
+    
+    func capitalizingFirstLetter() -> String {
+        return prefix(1).uppercased() + self.lowercased().dropFirst()
+    }
 }

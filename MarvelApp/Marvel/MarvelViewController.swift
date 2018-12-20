@@ -1,5 +1,5 @@
 //
-//  PageViewController.swift
+//  MarvelViewController.swift
 //  MarvelApp
 //
 //  Created by Laureen Schausberger on 14/11/2018.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PageViewController: UIViewController {
+class MarvelViewController: UIViewController {
     
     @IBOutlet weak var segmentView: UIView!
     @IBOutlet weak var segment: UISegmentedControl!
@@ -16,9 +16,13 @@ class PageViewController: UIViewController {
     @IBOutlet weak var comicsContainer: UIView!
     @IBOutlet weak var charactersContainer: UIView!
     @IBOutlet weak var creatorsContainer: UIView!
-
+    
+    @IBOutlet weak var indicatorView: UIActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "Marvel Database"
+        indicatorView.startAnimating()
         setupLayout()
     }
     
