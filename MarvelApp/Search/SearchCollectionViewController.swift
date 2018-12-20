@@ -10,7 +10,7 @@
 import UIKit
 
 final class SearchCollectionViewController: CollectionViewController {
-    
+
     func requestData(forType type: Type, forName name: String) {
         self.objectsToShow = nil
         

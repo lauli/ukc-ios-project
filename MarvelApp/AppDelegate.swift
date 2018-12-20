@@ -31,11 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
-        do {
-            try reachability.startNotifier()
-        } catch {
-            print("AppDelegate > Unable to start notifier.")
-        }
+       startReachablityNotifier()
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -105,7 +101,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         reachability.whenUnreachable = { _ in
             self.reachabilityChanged()
         }
-        
+        startReachablityNotifier()
+    }
+    
+    private func startReachablityNotifier() {
         do {
             try reachability.startNotifier()
         } catch {

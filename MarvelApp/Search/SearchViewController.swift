@@ -16,18 +16,20 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     @IBOutlet weak var characterButton: UIButton!
     @IBOutlet weak var creatorButton: UIButton!
     @IBOutlet weak var collectionViewContainer: UIView!
+    @IBOutlet weak var indicatorView: UIActivityIndicatorView!
     
     private let dataManager = DataManager.shared
     private var collectionViewController: SearchCollectionViewController!
     
     private var selectedType: Type = .characters
+    private var timer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Search"
-            
         searchBar.delegate = self
         collectionViewContainer.isHidden = false
+        indicatorView.isHidden = true
         setupLayout()
         // Do any additional setup after loading the view.
     }
@@ -97,7 +99,18 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
             return
         }
         
+        indicatorView.startAnimating()
+        indicatorView.isHidden = false
         collectionViewController.requestData(forType: selectedType, forName: nameToFind)
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            if self.collectionViewController.objectsToShow != nil {
+                self.timer?.invalidate()
+                self.timer = nil
+                self.indicatorView.stopAnimating()
+                self.indicatorView.isHidden = true
+            }
+        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

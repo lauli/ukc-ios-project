@@ -579,6 +579,11 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Creator"/>
                             </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="QGl-nw-0ze">
+                                <rect key="frame" x="177" y="387" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="color" cocoaTouchSystemColor="darkTextColor"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -594,6 +599,7 @@
                         <outlet property="collectionViewContainer" destination="je3-vi-nE3" id="whS-no-CU3"/>
                         <outlet property="comicButton" destination="Cqh-Cw-y4L" id="5rP-wi-Xsa"/>
                         <outlet property="creatorButton" destination="1Na-ua-fzx" id="KMc-pW-liF"/>
+                        <outlet property="indicatorView" destination="QGl-nw-0ze" id="XEM-K6-NNs"/>
                         <outlet property="searchBar" destination="pcH-4d-AqW" id="SaR-YZ-rRm"/>
                     </connections>
                 </viewController>
@@ -729,7 +735,13 @@
                             <outlet property="delegate" destination="wnD-gx-qPl" id="ab0-wv-eNL"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="v7A-V7-kRR"/>
+                    <navigationItem key="navigationItem" id="v7A-V7-kRR">
+                        <barButtonItem key="rightBarButtonItem" systemItem="trash" id="3lV-VY-mSJ">
+                            <connections>
+                                <action selector="deleteAllFavs:" destination="wnD-gx-qPl" id="2n0-MR-SM7"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fLt-Yu-XEP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
