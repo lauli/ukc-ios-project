@@ -27,10 +27,13 @@
 		9B4AC31C219B765100BFF6F9 /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4AC31B219B765100BFF6F9 /* Type.swift */; };
 		9B4AC31E219B7C8900BFF6F9 /* MarvelObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4AC31D219B7C8900BFF6F9 /* MarvelObject.swift */; };
 		9B4AC320219B80B800BFF6F9 /* MarvelCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4AC31F219B80B800BFF6F9 /* MarvelCollectionViewController.swift */; };
-		9B4AC322219BA76200BFF6F9 /* MarvelCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4AC321219BA76200BFF6F9 /* MarvelCollectionViewCell.swift */; };
+		9B4AC322219BA76200BFF6F9 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4AC321219BA76200BFF6F9 /* CollectionViewCell.swift */; };
 		9B4AC324219BAD7C00BFF6F9 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4AC323219BAD7C00BFF6F9 /* PageViewController.swift */; };
 		9BB5E4A9219F15C200FB38D0 /* DetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5E4A8219F15C200FB38D0 /* DetailTableViewController.swift */; };
 		9BC50B7F21BF366500A42C0F /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC50B7E21BF366500A42C0F /* CollectionViewController.swift */; };
+		C85395E921CAF2F80026B432 /* SearchCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85395E821CAF2F80026B432 /* SearchCollectionViewController.swift */; };
+		C85395EB21CAF3280026B432 /* FavoriteCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85395EA21CAF3280026B432 /* FavoriteCollectionViewController.swift */; };
+		C85395ED21CAFDEB0026B432 /* DetailCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85395EC21CAFDEB0026B432 /* DetailCollectionViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,11 +61,14 @@
 		9B4AC31B219B765100BFF6F9 /* Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Type.swift; sourceTree = "<group>"; };
 		9B4AC31D219B7C8900BFF6F9 /* MarvelObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelObject.swift; sourceTree = "<group>"; };
 		9B4AC31F219B80B800BFF6F9 /* MarvelCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelCollectionViewController.swift; sourceTree = "<group>"; };
-		9B4AC321219BA76200BFF6F9 /* MarvelCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelCollectionViewCell.swift; sourceTree = "<group>"; };
+		9B4AC321219BA76200BFF6F9 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		9B4AC323219BAD7C00BFF6F9 /* PageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
 		9BB5E4A8219F15C200FB38D0 /* DetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTableViewController.swift; sourceTree = "<group>"; };
 		9BC50B7E21BF366500A42C0F /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		C0210BC7EFFEDE1A848E7BFA /* Pods-MarvelApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarvelApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MarvelApp/Pods-MarvelApp.debug.xcconfig"; sourceTree = "<group>"; };
+		C85395E821CAF2F80026B432 /* SearchCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCollectionViewController.swift; sourceTree = "<group>"; };
+		C85395EA21CAF3280026B432 /* FavoriteCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCollectionViewController.swift; sourceTree = "<group>"; };
+		C85395EC21CAFDEB0026B432 /* DetailCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCollectionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,7 +95,6 @@
 			isa = PBXGroup;
 			children = (
 				9B4AC31F219B80B800BFF6F9 /* MarvelCollectionViewController.swift */,
-				9B4AC321219BA76200BFF6F9 /* MarvelCollectionViewCell.swift */,
 			);
 			path = Marvel;
 			sourceTree = "<group>";
@@ -98,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				9B3D3E4221C35A04002517BF /* SearchViewController.swift */,
+				C85395E821CAF2F80026B432 /* SearchCollectionViewController.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -106,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				9B4AB96521C20D7300018F15 /* FavoritesViewController.swift */,
+				C85395EA21CAF3280026B432 /* FavoriteCollectionViewController.swift */,
 			);
 			path = Favorites;
 			sourceTree = "<group>";
@@ -133,6 +140,7 @@
 			children = (
 				9B4AC2F32199200400BFF6F9 /* AppDelegate.swift */,
 				9BC50B7E21BF366500A42C0F /* CollectionViewController.swift */,
+				9B4AC321219BA76200BFF6F9 /* CollectionViewCell.swift */,
 				9B4AC30821992C7700BFF6F9 /* Extensions.swift */,
 				9B4AC323219BAD7C00BFF6F9 /* PageViewController.swift */,
 				9B4AC30C219B616E00BFF6F9 /* TabBarController.swift */,
@@ -179,6 +187,7 @@
 				9B4AC30A219AEDFD00BFF6F9 /* DetailViewController.swift */,
 				9BB5E4A8219F15C200FB38D0 /* DetailTableViewController.swift */,
 				9B2EBF95219F28B0005723DD /* DetailTableViewCell.swift */,
+				C85395EC21CAFDEB0026B432 /* DetailCollectionViewController.swift */,
 			);
 			path = DetailsView;
 			sourceTree = "<group>";
@@ -319,9 +328,11 @@
 				9B4AC317219B678100BFF6F9 /* Comic.swift in Sources */,
 				9B0BC4A621C1F88200793963 /* Decoder.swift in Sources */,
 				9BC50B7F21BF366500A42C0F /* CollectionViewController.swift in Sources */,
+				C85395ED21CAFDEB0026B432 /* DetailCollectionViewController.swift in Sources */,
 				9B4AC31E219B7C8900BFF6F9 /* MarvelObject.swift in Sources */,
 				9B4AC319219B6A7E00BFF6F9 /* Creator.swift in Sources */,
 				9BB5E4A9219F15C200FB38D0 /* DetailTableViewController.swift in Sources */,
+				C85395EB21CAF3280026B432 /* FavoriteCollectionViewController.swift in Sources */,
 				9B4AC31C219B765100BFF6F9 /* Type.swift in Sources */,
 				9B3D3E4321C35A04002517BF /* SearchViewController.swift in Sources */,
 				9B4AB96621C20D7300018F15 /* FavoritesViewController.swift in Sources */,
@@ -329,7 +340,8 @@
 				9B4AC30F219B658200BFF6F9 /* DataManager.swift in Sources */,
 				9B2EBF96219F28B0005723DD /* DetailTableViewCell.swift in Sources */,
 				9B4AC30B219AEDFD00BFF6F9 /* DetailViewController.swift in Sources */,
-				9B4AC322219BA76200BFF6F9 /* MarvelCollectionViewCell.swift in Sources */,
+				C85395E921CAF2F80026B432 /* SearchCollectionViewController.swift in Sources */,
+				9B4AC322219BA76200BFF6F9 /* CollectionViewCell.swift in Sources */,
 				9B4AC30D219B616E00BFF6F9 /* TabBarController.swift in Sources */,
 				9B4AC2F42199200400BFF6F9 /* AppDelegate.swift in Sources */,
 				9B4AC30921992C7700BFF6F9 /* Extensions.swift in Sources */,

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MarvelCollectionViewCell: UICollectionViewCell {
+class CollectionViewCell: UICollectionViewCell {
     
     @IBOutlet var imageView: UIImageView!
     @IBOutlet weak var titleView: UIView!
@@ -83,16 +83,20 @@ class MarvelCollectionViewCell: UICollectionViewCell {
     }
     
     private func showPicture(forImageUrl url: String) {
-        DataManager().requestImage(forImageUrl: url) { image, success in
+        
+        DataManager().requestImage(forImageUrl: url) { image, urlToCheckIfItIsSame in
+            
+            if urlToCheckIfItIsSame != self.marvelObject?.thumbnail {
+                // old fetch request, don't set image
+                return
+            }
             
             DispatchQueue.main.async {
                 self.indicatorView.stopAnimating()
                 self.contentView.backgroundColor = UIColor(white: 0.25, alpha: 1)
                 
-                if success {
+                if image != nil {
                     self.imageView.image = image
-                } else {
-                    self.imageView.image = UIImage(named: "default")!
                 }
             }
         }
@@ -100,7 +104,7 @@ class MarvelCollectionViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        imageView.image = nil
+        //imageView.image = nil
         marvelObject = nil
         indicatorView.startAnimating()
         title.text = "Fetching Data"

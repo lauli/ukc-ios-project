@@ -68,24 +68,27 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     func requestDetails(atIndex index: Int) {
         switch marvelObject.type {
         case .comics:
-            dataManager.requestDetails(forObject: marvelObject as! Comic, atArrayIndex: index) { success in
-                if success {
+            dataManager.requestDetails(forObject: marvelObject as! Comic, atArrayIndex: index) { data, success in
+                if success, let value = data {
                     print("CollectionViewController > Successfully requested Comic Details.")
+                    self.marvelObject = value
                     self.update()
                 }
             }
         case .characters:
-            dataManager.requestDetails(forObject: marvelObject as! Character, atArrayIndex: index) { success in
-                if success {
+            dataManager.requestDetails(forObject: marvelObject as! Character, atArrayIndex: index) { data, success in
+                if success, let value = data {
                     print("CollectionViewController > Successfully requested Character Details.")
+                    self.marvelObject = value
                     self.update()
                 }
             }
             
         case .creators:
-            dataManager.requestDetails(forObject: marvelObject as! Creator, atArrayIndex: index) { success in
-                if success {
+            dataManager.requestDetails(forObject: marvelObject as! Creator, atArrayIndex: index) { data, success in
+                if success, let value = data {
                     print("CollectionViewController > Successfully requested Creator Details.")
+                    self.marvelObject = value
                     self.update()
                 }
             }
@@ -201,8 +204,8 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func showPicture(forImageUrl url: String) {
-        DataManager().requestImage(forImageUrl: url) { image, success in
-            if success {
+        DataManager().requestImage(forImageUrl: url) { image, _ in
+            if image != nil {
                 DispatchQueue.main.async {
                     self.imageView.image = image
                 }

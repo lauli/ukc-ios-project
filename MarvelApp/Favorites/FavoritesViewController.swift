@@ -12,9 +12,14 @@ import SnapKit
 class FavoritesViewController: UIViewController {
     
     @IBOutlet weak var contentView: UIView!
+    
     @IBOutlet weak var imageComics: UIImageView!
     @IBOutlet weak var imageCharacters: UIImageView!
     @IBOutlet weak var imageCreators: UIImageView!
+    
+    @IBOutlet weak var labelComics: UILabel!
+    @IBOutlet weak var labelCharacters: UILabel!
+    @IBOutlet weak var labelCreators: UILabel!
     
     private var idsOfObjectsToBeShown = [Int]()
     private var typeToBeShown: Type = .characters
@@ -51,6 +56,16 @@ class FavoritesViewController: UIViewController {
         imageComics.alpha = 0.75
         imageCharacters.alpha = 0.75
         imageCreators.alpha = 0.75
+        
+        labelComics.snp.makeConstraints { make in
+            make.center.equalTo(imageComics)
+        }
+        labelCharacters.snp.makeConstraints { make in
+            make.center.equalTo(imageCharacters)
+        }
+        labelCreators.snp.makeConstraints { make in
+            make.center.equalTo(imageCreators)
+        }
     }
     
     private func setupGestureRecognizer() {
@@ -89,10 +104,10 @@ class FavoritesViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let collectionViewController = segue.destination as? CollectionViewController else {
+        guard let collectionViewController = segue.destination as? FavoriteCollectionViewController else {
             return
         }
-        collectionViewController.requestFavoriteData(forType: typeToBeShown)
+        collectionViewController.requestData(forType: typeToBeShown)
     }
 
 }

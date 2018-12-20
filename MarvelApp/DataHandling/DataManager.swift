@@ -35,7 +35,7 @@ final class DataManager {
     // data types
     typealias Success = (Bool) -> ()
     typealias RetrievedData = (Int, Bool) -> ()
-    typealias ImageData = (UIImage?, Bool) -> ()
+    typealias ImageData = (UIImage?, String?) -> ()
     typealias DetailArrayData = ([MarvelObject]?, Bool) -> ()
     typealias SearchData = (MarvelObject?, Bool) -> ()
     
@@ -48,28 +48,7 @@ final class DataManager {
     
     func request(type: Type, amountOfObjectsToRequest amount: Int = 30, completion: @escaping RetrievedData) {
         
-        let skip = alreadyRequestedAmount[type.rawValue] ?? 0
-        let orderBy: String
-        
-        switch type {
-        case .comics:
-            orderBy = "title"
-        case .characters:
-            orderBy = "name"
-        case .creators:
-            orderBy = "firstName"
-        }
-        
-        var url = "https://gateway.marvel.com:443/v1/public/"
-        url.append(type.rawValue + "?")
-        url.append("orderBy=" + orderBy)
-        url.append("&limit=\(amount)")
-        url.append("&offset=\(skip+1)")
-        url.append("&ts=\(timeStamp)")
-        url.append("&apikey=" + apiKey)
-        url.append("&hash=" + hash)
-        
-        let dataTask = URLSession.shared.dataTask(with: URL(string: url)!) { data, response, error in
+        let dataTask = URLSession.shared.dataTask(with: URL(string: urlForFetchingMoreData(amount: amount, type: type))!) { data, response, error in
             guard let data = data else {
                 print("DataManger > Couldn't fetch data from URL.")
                 print(error?.localizedDescription as Any)
@@ -158,30 +137,24 @@ final class DataManager {
         let dataTask = URLSession.shared.dataTask(with: URL(string: url)!) { data, response, error in
             guard let data = data, error == nil else {
                 print("DataManager > requestImage() image downloader, data or response nil for url: \(url)")
-                completion(nil, false)
+                completion(nil, nil)
                 return
             }
             
             if let image = UIImage(data: data) {
-                completion(image, true)
+                completion(image, url)
             } else {
-                completion(nil, false)
+                completion(nil, nil)
             }
         }
         dataTask.resume()
     }
     
-    // MARK: -Request Standalone Comic
+    // MARK: -Request Details of a specific object
     
-    func requestDetails(forObject object: MarvelObject, atArrayIndex index: Int, completion: @escaping Success) {
+    func requestDetails(forObject object: MarvelObject, atArrayIndex index: Int, completion: @escaping SearchData) {
         
-        var url = "https://gateway.marvel.com:443/v1/public/\(object.type.rawValue)?"
-        url.append("id=\(object.id)")
-        url.append("&ts=\(timeStamp)")
-        url.append("&apikey=" + apiKey)
-        url.append("&hash=" + hash)
-        
-        let dataTask = URLSession.shared.dataTask(with: URL(string: url)!) { data, response, error in
+        let dataTask = URLSession.shared.dataTask(with: URL(string: urlForDetailsById(object.id, type: object.type))!) { data, response, error in
             guard let data = data else {
                 print("DataManger > Couldn't fetch data from URL.")
                 print(error?.localizedDescription as Any)
@@ -190,7 +163,7 @@ final class DataManager {
             
             guard let (JSONDecoded, _) = self.decoder.results(forData: data),
                 let jsonList = JSONDecoded as? [Any] else {
-                    completion(false)
+                    completion(nil, false)
                     return
             }
             
@@ -199,137 +172,109 @@ final class DataManager {
                 
                 guard let json = result as? [String: Any] else {
                     print("DataManger > requestDetails > Couldn't retrieve data from JSON for details.")
-                    completion(false)
+                    completion(nil, false)
                     return
                 }
                 
                 switch object.type {
                 case .comics:
-                    if let (name, newObject) = self.decoder.comicDetails(fromJSON: json, addToOldObject: object as! Comic),
-                        self.comics[index].name == name {
-                        self.comics[index] = newObject
+                    if let (name, newObject) = self.decoder.comicDetails(fromJSON: json, addToOldObject: object as! Comic) {
+                        if index < self.comics.count, self.comics[index].name == name {
+                            self.comics[index] = newObject
+                        }
+                        completion(newObject, true)
                     }
                     
                 case .characters:
-                    if let (name, newObject) = self.decoder.characterDetails(fromJSON: json, addToOldObject: object as! Character),
-                        self.characters[index].name == name {
-                        self.characters[index] = newObject
+                    if let (name, newObject) = self.decoder.characterDetails(fromJSON: json, addToOldObject: object as! Character) {
+                        if index < self.characters.count, self.characters[index].name == name {
+                            self.characters[index] = newObject
+                        }
+                        completion(newObject, true)
                     }
                     
                 case .creators:
-                    if let (name, newObject) = self.decoder.creatorDetails(fromJSON: json, addToOldObject: object as! Creator),
-                        self.creators[index].name == name {
-                        self.creators[index] = newObject
+                    if let (name, newObject) = self.decoder.creatorDetails(fromJSON: json, addToOldObject: object as! Creator) {
+                        if index < self.creators.count, self.creators[index].name == name {
+                            self.creators[index] = newObject
+                        }
+                        completion(newObject, true)
                     }
                 }
-                
             }
-            completion(true)
-            
         }
         
         dataTask.resume()
     }
     
+    // MARK: -Search and request Objects that have the same name as stored in parameter names
     
-    
-    
-    
-    
-    // MARK: -Request Data from Detailobjects for DetailCollectionView
-    
-    func requestDataForDetailCollectionView(about type: Type, from marvelObject: MarvelObject, completion: @escaping DetailArrayData) {
+    func requestDataForDetailCollectionView(about type: Type, from names: [String]?, forSearchTab: Bool = false, completion: @escaping DetailArrayData) {
         
-        var array: [MarvelObject]
-        
-        switch type {
-        case .comics:
-            array = [Comic]()
-        case .characters:
-            array = [Character]()
-        case .creators:
-            array = [Creator]()
+        guard let arrayOfNames = names else {
+            completion(nil, false)
+            return
         }
         
-        switch type {
-        case .comics:
-            if let comicNames = marvelObject.comics {
-                for comicName in comicNames {
-                    search(forType: .comics, byName: comicName) { returnedValue, success in
-                        if success, let comic = returnedValue as? Comic {
-                            array.append(comic)
-                        }
-                        completion(array, true)
+        var array = [MarvelObject]()
+        
+        if forSearchTab {
+            for name in arrayOfNames {
+                searchFromSearchTab(forType: type, byName: name) { returnedValue, success in
+                    if success, let comic = returnedValue {
+                        array.append(comic)
                     }
+                    
+                    array.sort(by: { $0.name < $1.name })
+                    completion(array, true)
                 }
-            } else {
-                completion(nil, false)
-                return
             }
             
-        case .characters:
-            if let characterNames = marvelObject.characters {
-                for characterName in characterNames {
-                    search(forType: .characters, byName: characterName) { returnedValue, success in
-                        if success, let comic = returnedValue as? Character {
-                            array.append(comic)
-                        }
-                        completion(array, true)
+        } else {
+            for name in arrayOfNames {
+                search(forType: type, byName: name) { returnedValue, success in
+                    if success, let comic = returnedValue {
+                        array.append(comic)
                     }
+                    
+                    array.sort(by: { $0.name < $1.name })
+                    completion(array, true)
                 }
-            } else {
+            }
+        }
+        
+    }
+    
+    
+    private func searchFromSearchTab(forType type: Type, byName name: String, completion: @escaping SearchData) {
+        // check if name needs to be converted to utf-8
+        guard let encodedName = name.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed),
+            let encodedURL = URL(string: urlForSearchNameFromSearchTab(encodedName, type: type)) else {
                 completion(nil, false)
                 return
-            }
-            
-        case .creators:
-            if let creatorNames = marvelObject.creators {
-                for creatorName in creatorNames {
-                    search(forType: .creators, byName: creatorName) { returnedValue, success in
-                        if success, let comic = returnedValue as? Creator {
-                            array.append(comic)
-                        }
-                        completion(array, true)
-                    }
-                }
-            } else {
-                completion(nil, false)
-                return
-            }
+        }
+        
+        search(url: encodedURL, forType: type) { data, success in
+            completion(data, success)
         }
     }
     
     private func search(forType type: Type, byName name: String, completion: @escaping SearchData) {
         // check if name needs to be converted to utf-8
-        guard let encodedName = name.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed) else {
-            completion(nil, false)
-            return
+        guard let encodedName = name.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed),
+            let encodedURL = URL(string: urlForSearchNameFromMarvelobject(encodedName, type: type)) else {
+                completion(nil, false)
+                return
         }
         
-        let nameKey: String
-        
-        switch type {
-        case .comics:
-            nameKey = "title"
-        case .characters:
-            nameKey = "name"
-        case .creators:
-            nameKey = "nameStartsWith"
+        search(url: encodedURL, forType: type) { data, success in
+            completion(data, success)
         }
-        
-        var url = "https://gateway.marvel.com:443/v1/public/"
-        url.append(type.rawValue + "?")
-        url.append("\(nameKey)=\(encodedName)")
-        url.append("&ts=\(timeStamp)")
-        url.append("&apikey=" + apiKey)
-        url.append("&hash=" + hash)
-        
-        guard let encodedURL = URL(string: url) else {
-            completion(nil, false)
-            return
-        }
-        
-        let dataTask = URLSession.shared.dataTask(with: encodedURL) { data, response, error in
+    }
+    
+    
+    private func search(url: URL, forType type: Type, completion: @escaping SearchData) {
+        let dataTask = URLSession.shared.dataTask(with: url) { data, response, error in
             
             guard let results = self.decoder.dataToResult(data: data) else {
                 print("DataManger > decodeBasicData -> Couldn't retrieve data from JSON.")
@@ -339,44 +284,36 @@ final class DataManager {
             
             for result in results {
                 guard let object = result as? [String: Any], let marvelObject = self.decoder.basicObjectInformation(fromJSON: object, forType: type) else {
-                print("DataManger > decodeBasicData -> Couldn't retrieve data from JSON result.")
-                completion(nil, false)
-                return
-            }
-            
-            switch type {
-            case .comics:
-                completion(Comic(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail), true)
-            case .characters:
-                completion(Character(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail), true)
-            case .creators:
-                completion(Creator(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail), true)
+                    print("DataManger > decodeBasicData -> Couldn't retrieve data from JSON result.")
+                    completion(nil, false)
+                    return
+                }
+                
+                switch type {
+                case .comics:
+                    completion(Comic(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail), true)
+                case .characters:
+                    completion(Character(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail), true)
+                case .creators:
+                    completion(Creator(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail), true)
+                }
             }
         }
-    }
-    
+        
         dataTask.resume()
     }
     
     // MARK: -Request Data from Favorites for DetailCollectionView
     
     func requestDataForDetailCollectionView(about type: Type, byIds ids: [Int], completion: @escaping DetailArrayData) {
-        var array: [MarvelObject]
-        
-        switch type {
-        case .comics:
-            array = [Comic]()
-        case .characters:
-            array = [Character]()
-        case .creators:
-            array = [Creator]()
-        }
+        var array = [MarvelObject]()
         
         for id in ids {
             search(forType: type, byId: id) { returnedValue, success in
                 if success, let value = returnedValue {
                     array.append(value)
                 }
+                array.sort(by: { $0.name < $1.name })
                 completion(array, true)
             }
         }
@@ -385,21 +322,14 @@ final class DataManager {
     
     private func search(forType type: Type, byId id: Int, completion: @escaping SearchData) {
         
-        var url = "https://gateway.marvel.com:443/v1/public/"
-        url.append("\(type.rawValue)/")
-        url.append("\(id)?")
-        url.append("&ts=\(timeStamp)")
-        url.append("&apikey=" + apiKey)
-        url.append("&hash=" + hash)
-        
-        guard let encodedURL = URL(string: url) else {
+        guard let encodedURL = URL(string: urlForSearchId(id, type: type)) else {
             completion(nil, false)
             return
         }
         
         let dataTask = URLSession.shared.dataTask(with: encodedURL) { data, response, error in
             
-            guard let object = self.decoder.dataToResult(data: data) as? [String: Any],
+            guard let object = self.decoder.dataToResult(data: data)?.first as? [String: Any],
                 let marvelObject = self.decoder.basicObjectInformation(fromJSON: object, forType: type) else {
                     print("DataManger > decodeBasicData -> Couldn't retrieve exact data from JSON.")
                     completion(nil, false)
@@ -423,6 +353,88 @@ final class DataManager {
 
 extension DataManager {
     
+    //    private func emptyArrayByType(_ type: MarvelType)
+    
+}
+
+extension DataManager {
+    
+    private var authorisation: String {
+        var url = "&ts=\(timeStamp)"
+        url.append("&apikey=" + apiKey)
+        url.append("&hash=" + hash)
+        return url
+    }
+    
+    private func urlForSearchId(_ input: Int, type: Type) -> String {
+        var url = basicUrl + type.rawValue
+        url.append("/" + "\(input)")
+        url.append("?" + authorisation)
+        return url
+    }
+    
+    private func urlForSearchNameFromSearchTab(_ input: String, type: Type) -> String {
+        switch type {
+        case .comics:
+            return urlForSearchName(input, type: type, nameKey: "titleStartsWith")
+        case .characters, .creators:
+            return urlForSearchName(input, type: type, nameKey: "nameStartsWith")
+        }
+    }
+    
+    private func urlForSearchNameFromMarvelobject(_ input: String, type: Type) -> String {
+        switch type {
+        case .comics:
+            return urlForSearchName(input, type: type, nameKey: "title")
+        case .characters:
+            return urlForSearchName(input, type: type, nameKey: "name")
+        case .creators:
+            return urlForSearchName(input, type: type, nameKey: "nameStartsWith")
+        }
+    }
+    
+    private func urlForSearchName(_ input: String, type: Type, nameKey: String) -> String {
+        var url = basicUrl + type.rawValue
+        url.append("?" + nameKey + "=" + input)
+        url.append(authorisation)
+        return url
+    }
+    
+    private func urlForDetailsById(_ input: Int, type: Type) -> String {
+        var url = basicUrl + type.rawValue
+        url.append("?id=" + "\(input)")
+        url.append(authorisation)
+        return url
+    }
+    
+    private func urlForFetchingMoreData(amount input: Int, type: Type) -> String {
+        let skip = alreadyRequestedAmount[type.rawValue] ?? 0
+        let orderBy: String
+        
+        switch type {
+        case .comics:
+            orderBy = "title"
+        case .characters:
+            orderBy = "name"
+        case .creators:
+            orderBy = "firstName"
+        }
+        
+        var url = basicUrl
+        url.append(type.rawValue + "?")
+        url.append("orderBy=" + orderBy)
+        url.append("&limit=\(input)")
+        url.append("&offset=\(skip+1)")
+        url.append(authorisation)
+        
+        return url
+    }
+    
+    
+}
+
+extension DataManager {
+    
     private func md5(_ string: String) -> String {
         let context = UnsafeMutablePointer<CC_MD5_CTX>.allocate(capacity: 1)
         var digest = Array<UInt8>(repeating:0, count:Int(CC_MD5_DIGEST_LENGTH))
@@ -439,20 +451,4 @@ extension DataManager {
     
 }
 
-
-extension String {
-    func utf8DecodedString()-> String {
-        let data = self.data(using: .utf8)
-        if let message = String(data: data!, encoding: .nonLossyASCII){
-            return message
-        }
-        return ""
-    }
-    
-    func utf8EncodedString()-> String {
-        let messageData = self.data(using: .nonLossyASCII)
-        let text = String(data: messageData!, encoding: .utf8)!
-        return text
-    }
-}
 

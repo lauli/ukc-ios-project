@@ -54,7 +54,7 @@ class DetailTableViewController: UITableViewController {
     // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let detailCollectionViewController = segue.destination as? CollectionViewController else {
+        guard let detailCollectionViewController = segue.destination as? DetailCollectionViewController else {
                 return
         }
         
