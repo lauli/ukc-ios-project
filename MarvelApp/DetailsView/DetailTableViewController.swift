@@ -14,7 +14,7 @@ class DetailTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.tableFooterView = UIView(frame: .zero) // TODO: maybe add sharing feature here?
+        tableView.tableFooterView = UIView(frame: .zero)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {

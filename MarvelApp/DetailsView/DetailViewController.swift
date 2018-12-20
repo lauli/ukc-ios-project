@@ -6,8 +6,9 @@
 //  Copyright © 2018 Laureen Schausberger. All rights reserved.
 //
 
-import UIKit
 import SnapKit
+import Social
+import UIKit
 
 class DetailViewController: UIViewController, UIScrollViewDelegate {
     
@@ -256,6 +257,14 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         }
         
         isFav = !isFav
+    }
+    
+    @IBAction func share() {
+        let share: [Any] = [imageView.image!, "Uhhhh.. look whom I've found! Check \(marvelObject.name) out at MarvelApp!"]
+        
+        let activityViewController = UIActivityViewController(activityItems: share, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        self.present(activityViewController, animated: true, completion: nil)
     }
 
 }

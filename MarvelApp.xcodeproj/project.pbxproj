@@ -34,6 +34,7 @@
 		C85395E921CAF2F80026B432 /* SearchCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85395E821CAF2F80026B432 /* SearchCollectionViewController.swift */; };
 		C85395EB21CAF3280026B432 /* FavoriteCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85395EA21CAF3280026B432 /* FavoriteCollectionViewController.swift */; };
 		C85395ED21CAFDEB0026B432 /* DetailCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85395EC21CAFDEB0026B432 /* DetailCollectionViewController.swift */; };
+		C8F0746C21CB495A0029E16D /* QuizViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F0746B21CB495A0029E16D /* QuizViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,6 +70,7 @@
 		C85395E821CAF2F80026B432 /* SearchCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCollectionViewController.swift; sourceTree = "<group>"; };
 		C85395EA21CAF3280026B432 /* FavoriteCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCollectionViewController.swift; sourceTree = "<group>"; };
 		C85395EC21CAFDEB0026B432 /* DetailCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCollectionViewController.swift; sourceTree = "<group>"; };
+		C8F0746B21CB495A0029E16D /* QuizViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +151,7 @@
 				9B4AB96421C20D4B00018F15 /* Favorites */,
 				9B2EBF94219F26BD005723DD /* Marvel */,
 				9B3D3E4121C359AF002517BF /* Search */,
+				C8F0746A21CB493D0029E16D /* Quiz */,
 				9B4AC2FD2199200500BFF6F9 /* Assets.xcassets */,
 				9B4AC310219B65AD00BFF6F9 /* MarvelApp-Bridging-Header.h */,
 				9B4AC3022199200500BFF6F9 /* Info.plist */,
@@ -190,6 +193,14 @@
 				C85395EC21CAFDEB0026B432 /* DetailCollectionViewController.swift */,
 			);
 			path = DetailsView;
+			sourceTree = "<group>";
+		};
+		C8F0746A21CB493D0029E16D /* Quiz */ = {
+			isa = PBXGroup;
+			children = (
+				C8F0746B21CB495A0029E16D /* QuizViewController.swift */,
+			);
+			path = Quiz;
 			sourceTree = "<group>";
 		};
 		FBB44D750C186EBCD159664D /* Pods */ = {
@@ -327,6 +338,7 @@
 				9B4AC320219B80B800BFF6F9 /* MarvelCollectionViewController.swift in Sources */,
 				9B4AC324219BAD7C00BFF6F9 /* MarvelViewController.swift in Sources */,
 				9B4AC2FC2199200400BFF6F9 /* MarvelApp.xcdatamodeld in Sources */,
+				C8F0746C21CB495A0029E16D /* QuizViewController.swift in Sources */,
 				9B4AC317219B678100BFF6F9 /* Comic.swift in Sources */,
 				9B0BC4A621C1F88200793963 /* Decoder.swift in Sources */,
 				9BC50B7F21BF366500A42C0F /* CollectionViewController.swift in Sources */,

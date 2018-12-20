@@ -28,6 +28,7 @@ class CollectionViewCell: UICollectionViewCell {
             }
             title.text = marvelObject.name
             updateTitleLabelLayout()
+            self.isUserInteractionEnabled = true
         }
     }
     
@@ -40,6 +41,7 @@ class CollectionViewCell: UICollectionViewCell {
     }
     
     func setupLayout() {
+        self.isUserInteractionEnabled = false
         
         indicatorView.startAnimating()
         imageView.contentMode = .scaleAspectFill
