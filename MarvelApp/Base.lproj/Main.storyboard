@@ -136,7 +136,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gBh-qh-IIu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1590" y="937"/>
+            <point key="canvasLocation" x="-1306" y="1294"/>
         </scene>
         <!--Superheroes-->
         <scene sceneID="s3F-8h-BcU">
@@ -210,7 +210,7 @@
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="DIb-zs-eSq" customClass="DetailViewController" customModule="MarvelApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="oXj-PW-zHX">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="498"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZDO-C1-mmK">
@@ -305,7 +305,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6UB-QD-LVL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4535" y="965"/>
+            <point key="canvasLocation" x="3514" y="958"/>
         </scene>
         <!--Detail Table View Controller-->
         <scene sceneID="zRc-xu-aly">
@@ -380,7 +380,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="igy-0J-0s2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5316" y="963"/>
+            <point key="canvasLocation" x="4298" y="955"/>
         </scene>
         <!--Marvel-->
         <scene sceneID="m0C-KE-UT0">
@@ -537,7 +537,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FkU-eM-yIM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6049" y="963"/>
+            <point key="canvasLocation" x="5031" y="955"/>
         </scene>
         <!--Favs-->
         <scene sceneID="fnf-Sb-8Gj">
@@ -851,7 +851,7 @@
         <image name="search" width="20" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="E8c-tC-rBL"/>
+        <segue reference="0G9-97-yNQ"/>
         <segue reference="zaU-PH-7Cg"/>
     </inferredMetricsTieBreakers>
 </document>

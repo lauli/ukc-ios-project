@@ -39,13 +39,7 @@ class MarvelCollectionViewController: CollectionViewController, UICollectionView
                 print("CollectionViewController > Successfully downloaded \(self.marvelType.rawValue) Data.")
                 
                 DispatchQueue.main.async {
-                    if indexPaths != nil {
-                        let indexPathsToReload = self.calculateIndexPathsToReload(byAmountsFetched: amountOfRetrievedObjects)
-                        self.onFetchCompleted(with: indexPathsToReload)
-                        
-                    } else {
-                        self.collectionView.reloadData()
-                    }
+                    self.collectionView.reloadData()
                 }
             }
         }
@@ -88,12 +82,6 @@ extension MarvelCollectionViewController {
         }
     }
     
-    private func calculateIndexPathsToReload(byAmountsFetched amount: Int) -> [IndexPath] {
-        let startIndex = collectionView.visibleCells.count - 1
-        let endIndex = startIndex + amount
-        return (startIndex..<endIndex).map { IndexPath(row: $0, section: 0) }
-    }
-    
     func isLoadingCell(for indexPath: IndexPath) -> Bool {
         switch marvelType {
         case .comics:
@@ -103,24 +91,6 @@ extension MarvelCollectionViewController {
         case .creators:
             return indexPath.row >= dataManager.creators.count
         }
-    }
-    
-    func visibleIndexPathsToReload(intersecting indexPaths: [IndexPath]) -> [IndexPath] {
-        let indexPathsForVisibleCells = collectionView.indexPathsForVisibleItems
-        let indexPathsIntersection = Set(indexPathsForVisibleCells).intersection(indexPaths)
-        return Array(indexPathsIntersection)
-    }
-    
-    func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?) {
-        
-        guard let newIndexPathsToReload = newIndexPathsToReload else {
-            collectionView.isHidden = false
-            collectionView.reloadData()
-            return
-        }
-        
-        let indexPathsToReload = visibleIndexPathsToReload(intersecting: newIndexPathsToReload)
-        collectionView.reloadItems(at: indexPathsToReload)
     }
 }
 
