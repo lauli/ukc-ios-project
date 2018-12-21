@@ -10,6 +10,11 @@ import UIKit
 
 class DetailCollectionViewController: CollectionViewController {
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationItem.title = "\(marvelObject.name)'s Creators"
+    }
+    
     func requestData() {
         
         let requestType: Type

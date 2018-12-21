@@ -10,8 +10,8 @@ import SnapKit
 import UIKit
 
 class QuizViewController: UIViewController {
-
-    @IBOutlet weak var summaryLabel: UILabel!
+    
+    @IBOutlet weak var indicatorView: UIActivityIndicatorView!
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var buttonView: UIView!
@@ -20,7 +20,7 @@ class QuizViewController: UIViewController {
     @IBOutlet weak var buttonB: UIButton!
     @IBOutlet weak var buttonC: UIButton!
     @IBOutlet weak var buttonD: UIButton!
-
+    
     @IBOutlet weak var currentScoreLabel: UILabel!
     @IBOutlet weak var highScoreLabel: UILabel!
     @IBOutlet weak var questionLabel: UILabel!
@@ -28,6 +28,8 @@ class QuizViewController: UIViewController {
     private let dataManager = DataManager.shared
     private var marvelObject: MarvelObject = MarvelObject(type: .characters, id: 0, name: "", thumbnail: "")
     private var score = 0
+    private var oldHighScore = 0
+    private var timer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,54 +37,71 @@ class QuizViewController: UIViewController {
         let highScore = UserDefaults.standard.integer(forKey: "highscore")
         if highScore > 0 {
             highScoreLabel.text = "High Score: \(highScore)"
+            oldHighScore = highScore
         } else {
             highScoreLabel.isHidden = true
         }
         
         setupLayout()
+        loading(true)
         
-        if dataManager.characters.isEmpty, dataManager.characters.count < 60 {
-            self.selectRandomCharacter()
-            dataManager.request(type: .characters, amountOfObjectsToRequest: 100) { _,_  in
-               print("QuizViewController")
-            }
-
-        } else if dataManager.characters.isEmpty {
-            dataManager.request(type: .characters, amountOfObjectsToRequest: 100) { _,_  in
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            if self.dataManager.characters.count >= 10 {
+                self.timer?.invalidate()
+                self.timer = nil
                 self.selectRandomCharacter()
             }
-
-        } else {
-            selectRandomCharacter()
         }
     }
     
+    private func loading(_ hide: Bool) {
+        if hide {
+            indicatorView.startAnimating()
+        } else {
+            indicatorView.stopAnimating()
+        }
+        
+        imageView.isHidden = hide
+        buttonView.isHidden = hide
+        questionLabel.isHidden = hide
+    }
+    
     private func setupLayout() {
+        
+        let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
+        backgroundImage.image = UIImage(named: "quiz-background")
+        backgroundImage.contentMode = UIView.ContentMode.scaleAspectFill
+        self.view.insertSubview(backgroundImage, at: 0)
         
         currentScoreLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaInsets.bottom).offset(60)
             make.left.equalTo(view.safeAreaInsets.bottom).offset(20)
             make.right.equalTo(0)
         }
+        currentScoreLabel.textColor = .white
         
         highScoreLabel.snp.makeConstraints { make in
-            make.top.right.equalTo(view).offset(20)
+            make.top.equalTo(view.safeAreaInsets.bottom).offset(60)
+            make.right.equalTo(view.safeAreaInsets.bottom).inset(20)
             make.left.equalTo(0)
         }
+        highScoreLabel.textColor = .white
         
         imageView.snp.makeConstraints { make in
             make.top.equalTo(currentScoreLabel.snp.bottom).offset(20)
-            make.left.equalTo(view).offset(20)
-            make.right.equalTo(view).inset(20)
+            make.left.equalTo(view)
+            make.right.equalTo(view)
             make.height.equalTo(view.bounds.height / 3 + 50)
         }
         imageView.backgroundColor = .gray
+        imageView.layer.cornerRadius = 15
         
         questionLabel.snp.makeConstraints { make in
             make.top.equalTo(imageView.snp.bottom).offset(20)
             make.left.equalTo(view).offset(20)
             make.right.equalTo(view).inset(20)
         }
+        questionLabel.textColor = .white
         
         buttonView.snp.makeConstraints { make in
             make.top.equalTo(questionLabel.snp.bottom).offset(20)
@@ -90,39 +109,60 @@ class QuizViewController: UIViewController {
             make.right.equalTo(view).inset(20)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
         }
+        buttonView.backgroundColor = .clear
+        setupButtonLayout()
+    }
+    
+    private func setupButtonLayout() {
+        setupButtonLayout(forButton: buttonA, position: 0)
+        setupButtonLayout(forButton: buttonB, position: 1)
+        setupButtonLayout(forButton: buttonC, position: 2)
+        setupButtonLayout(forButton: buttonD, position: 3)
         
-        buttonA.snp.makeConstraints { make in
-            make.top.left.equalTo(buttonView)
-            make.width.equalTo(buttonView.bounds.width / 2 - 20)
-            make.height.equalTo(buttonView.bounds.height / 2 - 20)
+    }
+    
+    private func setupButtonLayout(forButton button: UIButton, position: Int) {
+        button.snp.makeConstraints { make in
+            make.width.equalTo(buttonView.bounds.width / 2 - 30)
+            make.height.equalTo(buttonView.bounds.height / 2 - 30)
+            
+            switch position {
+            case 0:
+                make.top.left.equalTo(buttonView)
+            case 1:
+                make.top.right.equalTo(buttonView)
+            case 2:
+                make.bottom.left.equalTo(buttonView)
+            default:
+                make.bottom.right.equalTo(buttonView)
+            }
         }
-        buttonA.backgroundColor = .red
-        buttonA.layer.cornerRadius = 15
+        button.layer.cornerRadius = 15
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .clear
+        button.layer.borderWidth = 1.0
+        button.layer.borderColor = UIColor(white: 1.0, alpha: 0.7).cgColor
         
-        buttonB.snp.makeConstraints { make in
-            make.top.right.equalTo(buttonView)
-            make.width.equalTo(buttonView.bounds.width / 2 - 20)
-            make.height.equalTo(buttonView.bounds.height / 2 - 20)
+        button.titleLabel?.lineBreakMode = .byWordWrapping
+        button.titleLabel?.numberOfLines = 0
+    }
+    
+    private func setupButtons(byNames names: [String]) {
+        buttonA.setTitle(names[0], for: .normal)
+        buttonB.setTitle(names[1], for: .normal)
+        buttonC.setTitle(names[2], for: .normal)
+        buttonD.setTitle(names[3], for: .normal)
+    }
+    
+    private func showPicture(forImageUrl url: String) {
+        dataManager.requestImage(forImageUrl: url) { image, _ in
+            DispatchQueue.main.async {
+                if image != nil {
+                    self.imageView.image = image
+                    self.loading(false)
+                }
+            }
         }
-        buttonB.backgroundColor = .blue
-        buttonB.layer.cornerRadius = 15
-        
-        buttonC.snp.makeConstraints { make in
-            make.bottom.left.equalTo(buttonView)
-            make.width.equalTo(buttonView.bounds.width / 2 - 20)
-            make.height.equalTo(buttonView.bounds.height / 2 - 20)
-        }
-        buttonC.backgroundColor = .green
-        buttonC.layer.cornerRadius = 15
-        
-        buttonD.snp.makeConstraints { make in
-            make.bottom.right.equalTo(buttonView)
-            make.width.equalTo(buttonView.bounds.width / 2 - 20)
-            make.height.equalTo(buttonView.bounds.height / 2 - 20)
-        }
-        buttonD.backgroundColor = .yellow
-        buttonD.layer.cornerRadius = 15
-        
     }
     
     func selectRandomCharacter() {
@@ -140,40 +180,65 @@ class QuizViewController: UIViewController {
             }
         }
         
-        setupButtons(byNames: array.shuffled())
-    }
-    
-    private func setupButtons(byNames names: [String]) {
-        buttonA.setTitle(names[0], for: .normal)
-        buttonB.setTitle(names[1], for: .normal)
-        buttonC.setTitle(names[2], for: .normal)
-        buttonD.setTitle(names[3], for: .normal)
-    }
-    
-    private func showPicture(forImageUrl url: String) {
-        DataManager().requestImage(forImageUrl: url) { image, _ in
-            DispatchQueue.main.async {
-                if image != nil {
-                    self.imageView.image = image
-                }
-            }
+        DispatchQueue.main.async {
+            self.setupButtons(byNames: array.shuffled())
         }
+    }
+    
+    private func updateScores() {
+        currentScoreLabel.text = "Your Score: \(score)"
+        if oldHighScore <= score {
+            UserDefaults.standard.set(score, forKey: "highscore")
+            currentScoreLabel.text = "High Score: \(score)"
+            highScoreLabel.isHidden = false
+        }
+    }
+    
+    private func resetGame() {
+        let message: String
+        
+        if oldHighScore > score {
+            message = "\nYou missed the highscore by \(oldHighScore-score). Better luck next time."
+        } else {
+            message = "\nBut congratulations - you beat the highscore by \(score-oldHighScore)! \nWohoooooo!"
+        }
+        let alertController = UIAlertController(title: "Game Over",
+                                                message: "Ups, seems like this was wrong ;) The correct answer was \(marvelObject.name). \(message)",
+            preferredStyle: .alert)
+        let action = UIAlertAction(title: "Ok", style: .default) { (action:UIAlertAction) in
+            print("QuizViewController > User has pressed ok on alertcontroller to accept his/her defeat.")
+            self.loading(true)
+            self.selectRandomCharacter()
+        }
+        alertController.addAction(action)
+        self.present(alertController, animated: true, completion: nil)
+        
+        score = 0
+        currentScoreLabel.text = "Your Score:"
     }
     
     
     @IBAction func buttonTapped(_ sender: UIButton) {
         if sender.titleLabel?.text == marvelObject.name {
             score = score + 100
-        
+            
         } else {
-            score = score - 100
+            resetGame()
+            return
         }
+        updateScores()
+        loading(true)
         
         selectRandomCharacter()
-        currentScoreLabel.text = "Your Score: \(score)"
         
-        if dataManager.characters.count < 150 {
-            dataManager.request(type: .characters, amountOfObjectsToRequest: 10) { _,_  in
+        guard let navigationController = tabBarController?.viewControllers?[1] as? UINavigationController,
+        let marvelDataViewController = navigationController.topViewController as? MarvelViewController,
+            let marvelCollectionVC = marvelDataViewController.activeContainer() else {
+            return
+        }
+        
+        if !marvelCollectionVC.isFetchInProgress, dataManager.characters.count < 150 {
+            dataManager.request(type: .characters, amountOfObjectsToRequest: 50) { _,_  in
                 print("QuizViewController > Requested more.")
             }
         }

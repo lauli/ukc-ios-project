@@ -11,14 +11,20 @@ import UIKit
 
 final class SearchCollectionViewController: CollectionViewController {
 
+    private(set) var nothingFound: Bool = false
+    
     func requestData(forType type: Type, forName name: String) {
         self.objectsToShow = nil
+        nothingFound = false
         
         dataManager.requestDataForDetailCollectionView(about: type, from: [name], forSearchTab: true) { values, success in
             if success {
                 print("DetailCollectionViewController > Successfully downloaded DataForDetailCollectionView for \(type.rawValue).")
                 
                 self.objectsToShow = values
+            }
+            if values?.isEmpty ?? true {
+                self.nothingFound = true
             }
         }
     }

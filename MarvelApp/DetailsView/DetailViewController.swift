@@ -141,7 +141,7 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         
         titleLabel.snp.makeConstraints { make in
             make.top.left.equalTo(informationContainer).inset(14)
-            make.right.equalTo(informationContainer).inset(50)
+            make.right.equalTo(informationContainer).inset(30)
             make.height.equalTo(titleLabel.optimalHeight)
         }
         
@@ -154,7 +154,7 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         
         favButton.snp.makeConstraints { make in
             make.top.right.equalTo(informationContainer).inset(14)
-            make.width.height.equalTo(32)
+            make.width.height.equalTo(25)
         }
         
         tableViewContainer.snp.makeConstraints { make in
@@ -266,6 +266,24 @@ class DetailViewController: UIViewController, UIScrollViewDelegate {
         activityViewController.popoverPresentationController?.sourceView = self.view
         self.present(activityViewController, animated: true, completion: nil)
     }
-
+    
+    @IBAction func saveImage(_ sender: Any) {
+        if let image = preDownloadedImage {
+            UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        }
+    }
+    
+    @objc func image(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer) {
+        if error == nil {
+            let ac = UIAlertController(title: "Saved", message: "Yesss.. From now on you can check this awesome \(marvelObject.type.rawValue.capitalizingFirstLetter())'s picture in your libarary! You're welcome.", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Thanks", style: .default))
+            present(ac, animated: true)
+        } else {
+            let ac = UIAlertController(title: "Ups..", message: "Oh no .. seems like there was a problem while saving the picture. Maybe try another time?", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            present(ac, animated: true)
+        }
+    }
+    
 }
 

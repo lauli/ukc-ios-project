@@ -98,7 +98,7 @@ final class Decoder {
         let (creatorTotal, creators) = self.decodeDetailsToStringArray(fromList: creatorList)
         
         if old.name == name {
-            old.description = description
+            old.description = description?.utf8DecodedString()
             old.format = format
             old.issueNumber = Int(issueNumber ?? 0)
             old.pages = pageCount
@@ -123,7 +123,7 @@ final class Decoder {
         let (comicTotal, comics) = self.decodeDetailsToStringArray(fromList: comicList)
         
         if old.name == name {
-            old.description = description
+            old.description = description?.utf8DecodedString()
             old.comicTotal = comicTotal
             old.comics = comics
         }

@@ -14,10 +14,10 @@ class MarvelCollectionViewController: UICollectionViewController, UICollectionVi
     private let dataManager = DataManager.shared
     
     private var reuseIdentifier = "Cell"
-    private var isFetchInProgress: Bool = false
     
     var marvelType: Type = .characters
-
+    var isFetchInProgress: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -29,7 +29,7 @@ class MarvelCollectionViewController: UICollectionViewController, UICollectionVi
             make.top.bottom.equalTo(view)
             make.left.right.equalTo(view).inset(5)
         }
-
+        
         requestData()
     }
     
@@ -37,7 +37,7 @@ class MarvelCollectionViewController: UICollectionViewController, UICollectionVi
         guard !isFetchInProgress else {
             return
         }
-
+        
         isFetchInProgress = true
         
         dataManager.request(type: marvelType, amountOfObjectsToRequest: amount) { amountOfRetrievedObjects, success in
@@ -57,9 +57,9 @@ class MarvelCollectionViewController: UICollectionViewController, UICollectionVi
             }
         }
     }
-
+    
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let detailsViewController = segue.destination as? DetailViewController,
@@ -70,23 +70,23 @@ class MarvelCollectionViewController: UICollectionViewController, UICollectionVi
         guard let marvelObject = cell.marvelObject, let indexPath = collectionView.indexPath(for: cell) else {
             return
         }
-
+        
         detailsViewController.marvelObject = marvelObject
         detailsViewController.preDownloadedImage = cell.imageView?.image
         detailsViewController.requestDetails(atIndex: indexPath.row)
     }
-
+    
     // MARK: - UICollectionViewDataSource
-
+    
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
-
-
+    
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataManager.totalAmountInDB[marvelType.rawValue] ?? 20
     }
-
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? CollectionViewCell else {
             print("CollectionViewController > CellType for \(self.marvelType.rawValue) doesn't match MarvelCollectionViewCell.")
@@ -117,7 +117,7 @@ class MarvelCollectionViewController: UICollectionViewController, UICollectionVi
         let height = UIScreen.main.bounds.height * 0.33
         return CGSize(width: width, height: height)
     }
-
+    
 }
 
 extension MarvelCollectionViewController {

@@ -115,14 +115,20 @@ final class DataManager {
             
             switch type {
             case .comics:
-                comics.append(Comic(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail))
-                comics.sort(by: { $0.name < $1.name })
+                if !comics.contains(where: { $0.id == marvelObject.id }) {
+                    comics.append(Comic(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail))
+                    comics.sort(by: { $0.name < $1.name })
+                }
             case .characters:
-                characters.append(Character(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail))
-                characters.sort(by: { $0.name < $1.name })
+                if !characters.contains(where: { $0.id == marvelObject.id }) {
+                    characters.append(Character(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail))
+                    characters.sort(by: { $0.name < $1.name })
+                }
             case .creators:
-                creators.append(Creator(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail))
-                creators.sort(by: { $0.name < $1.name })
+                if !creators.contains(where: { $0.id == marvelObject.id }) {
+                    creators.append(Creator(id: marvelObject.id, name: marvelObject.name, thumbnail: marvelObject.thumbnail))
+                    creators.sort(by: { $0.name < $1.name })
+                }
             }
         }
         
@@ -279,6 +285,11 @@ final class DataManager {
             guard let results = self.decoder.dataToResult(data: data) else {
                 print("DataManger > decodeBasicData -> Couldn't retrieve data from JSON.")
                 completion(nil, false)
+                return
+            }
+            
+            if results.isEmpty {
+                completion(nil, true)
                 return
             }
             

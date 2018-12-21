@@ -36,8 +36,10 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     
     private func setupLayout() {
         
+        //view.backgroundColor = UIColor(white: 0.77, alpha: 1)
+        
         collectionViewContainer.snp.makeConstraints { make in
-            make.top.equalTo(comicButton.snp.bottom).offset(5)
+            make.top.equalTo(comicButton.snp.bottom).offset(10)
             make.left.right.bottom.equalTo(view)
         }
         
@@ -46,7 +48,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
             make.left.equalTo(view)
             make.width.equalTo(view.bounds.width / 3)
         }
-        comicButton.layer.borderColor = UIColor.gray.cgColor
+        comicButton.layer.borderColor = UIColor.buttonBlue.cgColor
         comicButton.layer.borderWidth = 1
         comicButton.layer.cornerRadius = 10
         
@@ -55,7 +57,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
             make.left.equalTo(comicButton.snp.right)
             make.width.equalTo(comicButton)
         }
-        characterButton.layer.borderColor = UIColor.gray.cgColor
+        characterButton.layer.borderColor = UIColor.buttonBlue.cgColor
         characterButton.layer.borderWidth = 1
         characterButton.layer.cornerRadius = 10
         
@@ -64,7 +66,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
             make.left.equalTo(characterButton.snp.right)
             make.width.equalTo(comicButton)
         }
-        creatorButton.layer.borderColor = UIColor.gray.cgColor
+        creatorButton.layer.borderColor = UIColor.buttonBlue.cgColor
         creatorButton.layer.borderWidth = 1
         creatorButton.layer.cornerRadius = 10
         
@@ -73,14 +75,14 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     
     private func changeLayoutForSelectedButtons(comic: Bool = false, character: Bool = false, creator: Bool = false) {
         
-        comicButton.backgroundColor = comic ? .gray : .white
-        comicButton.setTitleColor(comic ? .white : .gray, for: .normal)
+        comicButton.backgroundColor = comic ? UIColor.buttonBlue : .white
+        comicButton.setTitleColor(comic ? .white : UIColor.buttonBlue, for: .normal)
         
-        characterButton.backgroundColor = character ? .gray : .white
-        characterButton.setTitleColor(character ? .white : .gray, for: .normal)
+        characterButton.backgroundColor = character ? UIColor.buttonBlue : .white
+        characterButton.setTitleColor(character ? .white : UIColor.buttonBlue, for: .normal)
         
-        creatorButton.backgroundColor = creator ? .gray : .white
-        creatorButton.setTitleColor(creator ? .white : .gray, for: .normal)
+        creatorButton.backgroundColor = creator ? UIColor.buttonBlue : .white
+        creatorButton.setTitleColor(creator ? .white : UIColor.buttonBlue, for: .normal)
         
         if comic {
             selectedType = .comics
@@ -104,11 +106,16 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         collectionViewController.requestData(forType: selectedType, forName: nameToFind)
         
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            if self.collectionViewController.objectsToShow != nil {
+            if self.collectionViewController.objectsToShow != nil || self.collectionViewController.nothingFound {
                 self.timer?.invalidate()
                 self.timer = nil
                 self.indicatorView.stopAnimating()
                 self.indicatorView.isHidden = true
+            }
+            if self.collectionViewController.nothingFound {
+                let ac = UIAlertController(title: "Nothing Found", message: "Please try another search request. (i.e. Spider-Man, Iron Man, Captain America, ...)", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .default))
+                self.present(ac, animated: true)
             }
         }
     }
@@ -124,5 +131,22 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
             self.collectionViewController = collectionViewController
         }
     }
+    
+    @IBAction func filterButtonTapped(_ sender: UIButton) {
+        switch sender.titleLabel?.text {
+        case "Comic":
+            selectedType = .comics
+            changeLayoutForSelectedButtons(comic: true)
+        case "Creator":
+            selectedType = .creators
+            changeLayoutForSelectedButtons(creator: true)
+        default:
+            selectedType = .characters
+            changeLayoutForSelectedButtons(character: true)
+        }
+        
+        collectionViewController.objectsToShow = nil
+    }
+    
     
 }

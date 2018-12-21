@@ -43,11 +43,21 @@ extension String {
     }
     
     func utf8DecodedString()-> String {
-        let data = self.data(using: .utf8)
-        if let message = String(data: data!, encoding: .nonLossyASCII){
-            return message
+        guard let data = self.data(using: .utf8) else {
+            return ""
         }
-        return ""
+        
+        let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
+            NSAttributedString.DocumentReadingOptionKey(rawValue: NSAttributedString.DocumentAttributeKey.documentType.rawValue): NSAttributedString.DocumentType.html,
+            NSAttributedString.DocumentReadingOptionKey(rawValue: NSAttributedString.DocumentAttributeKey.characterEncoding.rawValue): String.Encoding.utf8.rawValue
+        ]
+        
+        guard let attributedString = try? NSAttributedString(data: data, options: options, documentAttributes: nil) else {
+            return ""
+        }
+        
+        return attributedString.string
+        
     }
     
     func utf8EncodedString()-> String {
@@ -58,5 +68,12 @@ extension String {
     
     func capitalizingFirstLetter() -> String {
         return prefix(1).uppercased() + self.lowercased().dropFirst()
+    }
+}
+
+extension UIColor {
+    
+    open class var buttonBlue: UIColor {
+        return UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1)
     }
 }

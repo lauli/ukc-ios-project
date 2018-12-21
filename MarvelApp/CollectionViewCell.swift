@@ -106,7 +106,7 @@ class CollectionViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        //imageView.image = nil
+        imageView.image = nil
         marvelObject = nil
         indicatorView.startAnimating()
         title.text = "Fetching Data"

@@ -19,10 +19,25 @@ class MarvelViewController: UIViewController {
     
     @IBOutlet weak var indicatorView: UIActivityIndicatorView!
     
+    private var comicsController: MarvelCollectionViewController?
+    private var charactersController: MarvelCollectionViewController?
+    private var creatorsController: MarvelCollectionViewController?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Marvel Database"
         setupLayout()
+    }
+    
+    func activeContainer() -> MarvelCollectionViewController? {
+        if !comicsContainer.isHidden {
+            return comicsController
+        } else if !charactersContainer.isHidden {
+            return charactersController
+        } else if !creatorsContainer.isHidden {
+            return creatorsController
+        }
+        return nil
     }
     
     private func setupLayout() {
@@ -33,11 +48,15 @@ class MarvelViewController: UIViewController {
         segmentView.snp.makeConstraints { make in
             make.top.equalTo(view).offset(topbarHeight)
             make.left.right.equalTo(view)
-            make.height.equalTo(40)
+            make.height.equalTo(60)
         }
+        segmentView.backgroundColor = UIColor(white: 0.98, alpha: 1)
+        segmentView.layer.borderColor = UIColor(white: 0.6, alpha: 1).cgColor
+        segmentView.layer.borderWidth = 0.5
         
         segment.snp.makeConstraints { make in
-            make.top.left.right.equalTo(segmentView).inset(5)
+            make.top.equalTo(segmentView).offset(15)
+            make.left.right.equalTo(segmentView).inset(10)
         }
         
         comicsContainer.snp.makeConstraints { make in
@@ -86,12 +105,20 @@ class MarvelViewController: UIViewController {
         
         if segue.identifier == "ComicsSegue" {
             collectionViewController.marvelType = .comics
+            comicsController = collectionViewController
         } else if segue.identifier == "CharactersSegue" {
             collectionViewController.marvelType = .characters
+            charactersController = collectionViewController
         } else if segue.identifier == "CreatorsSegue" {
             collectionViewController.marvelType = .creators
+            creatorsController = collectionViewController
         }
         
     }
 
+    @IBAction func scrollToTop(_ sender: Any) {
+        if let activeController = activeContainer() {
+            activeController.collectionView.setContentOffset(.zero, animated: true)
+        }
+    }
 }

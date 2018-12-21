@@ -17,13 +17,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="WIN/LOSE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VTt-kV-06c">
-                                <rect key="frame" x="147" y="210" width="80" height="21"/>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="T1k-x0-VfT">
+                                <rect key="frame" x="169" y="203" width="37" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <color key="color" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HpX-aE-qkZ">
                                 <rect key="frame" x="0.0" y="81" width="375" height="279"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -102,8 +100,8 @@
                         <outlet property="currentScoreLabel" destination="gbn-iX-9LL" id="6A0-F0-8rw"/>
                         <outlet property="highScoreLabel" destination="Be0-Cp-a5W" id="3Xi-WL-Ux3"/>
                         <outlet property="imageView" destination="HpX-aE-qkZ" id="Vkv-P3-QkL"/>
+                        <outlet property="indicatorView" destination="T1k-x0-VfT" id="pij-g7-M7f"/>
                         <outlet property="questionLabel" destination="1wb-PV-nDw" id="euX-RZ-NCV"/>
-                        <outlet property="summaryLabel" destination="VTt-kV-06c" id="Q8d-65-fEr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="02O-si-wmA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -270,11 +268,18 @@
                         <viewLayoutGuide key="safeArea" id="YHB-P3-H5m"/>
                     </view>
                     <navigationItem key="navigationItem" id="IIF-LW-fTU">
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="PAc-jF-2rr">
-                            <connections>
-                                <action selector="share" destination="DIb-zs-eSq" id="fBj-8Y-dnP"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="action" id="PAc-jF-2rr">
+                                <connections>
+                                    <action selector="share" destination="DIb-zs-eSq" id="fBj-8Y-dnP"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="organize" id="n9O-P3-Kw4">
+                                <connections>
+                                    <action selector="saveImage:" destination="DIb-zs-eSq" id="XUr-zq-90Q"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="bottomLabel" destination="arv-3R-fFI" id="nW8-xb-RWa"/>
@@ -308,14 +313,14 @@
                                     <rect key="frame" x="0.0" y="0.0" width="343" height="249.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Comics" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dvG-2u-acy">
-                                            <rect key="frame" x="16" y="24" width="58" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dvG-2u-acy">
+                                            <rect key="frame" x="16" y="24" width="0.0" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Comic List" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G80-mX-jJg">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G80-mX-jJg">
                                             <rect key="frame" x="16" y="53" width="311" height="95"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -330,8 +335,8 @@
                                                 <segue destination="SPO-JY-62c" kind="show" id="y4s-47-j77"/>
                                             </connections>
                                         </button>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Amount" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VP8-QP-RaX">
-                                            <rect key="frame" x="234" y="24" width="60" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VP8-QP-RaX">
+                                            <rect key="frame" x="294" y="24" width="0.0" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -438,7 +443,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="ctQ-28-DgV"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Marvel Database" id="p8R-B5-l14"/>
+                    <navigationItem key="navigationItem" title="Marvel Database" id="p8R-B5-l14">
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="tQa-uW-nPq">
+                            <connections>
+                                <action selector="scrollToTop:" destination="Dpv-l5-sTH" id="riY-FA-4vQ"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="charactersContainer" destination="M9o-fl-bsT" id="WTH-dS-ulr"/>
                         <outlet property="comicsContainer" destination="HQL-ja-Iel" id="1xe-UQ-dGY"/>
@@ -659,16 +670,25 @@
                                 <rect key="frame" x="17" y="139" width="44" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Comic"/>
+                                <connections>
+                                    <action selector="filterButtonTapped:" destination="1eS-gm-ORZ" eventType="touchUpInside" id="zkI-L5-9rM"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y08-2J-rvo">
                                 <rect key="frame" x="153" y="139" width="68" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Character"/>
+                                <connections>
+                                    <action selector="filterButtonTapped:" destination="1eS-gm-ORZ" eventType="touchUpInside" id="02A-rF-tbk"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Na-ua-fzx">
                                 <rect key="frame" x="310" y="139" width="52" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Creator"/>
+                                <connections>
+                                    <action selector="filterButtonTapped:" destination="1eS-gm-ORZ" eventType="touchUpInside" id="rZP-3O-ryo"/>
+                                </connections>
                             </button>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="QGl-nw-0ze">
                                 <rect key="frame" x="177" y="387" width="20" height="20"/>
@@ -849,7 +869,7 @@
         <image name="marvel" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="VMm-Fp-bjq"/>
+        <segue reference="E8c-tC-rBL"/>
         <segue reference="zaU-PH-7Cg"/>
     </inferredMetricsTieBreakers>
 </document>
