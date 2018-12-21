@@ -9,5 +9,6 @@ use_frameworks!
 pod 'SnapKit', '~> 4.0.0'
 pod 'ReachabilitySwift'
 pod 'BTNavigationDropdownMenu'
+pod 'LTMorphingLabel'
 
 end

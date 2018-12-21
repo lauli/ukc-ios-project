@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AE92DABC73C2B50E7972A47E32CC7E38"
-               BlueprintName = "SnapKit"
+               BlueprintIdentifier = "DE0F4BA743D14AC6E921A230859EC8F1"
+               BlueprintName = "LTMorphingLabel"
                ReferencedContainer = "container:Pods.xcodeproj"
-               BuildableName = "SnapKit.framework">
+               BuildableName = "LTMorphingLabel.framework">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

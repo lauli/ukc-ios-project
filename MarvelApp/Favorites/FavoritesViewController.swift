@@ -6,10 +6,11 @@
 //  Copyright © 2018 Laureen Schausberger. All rights reserved.
 //
 
+import LTMorphingLabel
 import UIKit
 import SnapKit
 
-class FavoritesViewController: UIViewController {
+class FavoritesViewController: UIViewController, LTMorphingLabelDelegate {
     
     @IBOutlet weak var contentView: UIView!
     
@@ -17,9 +18,9 @@ class FavoritesViewController: UIViewController {
     @IBOutlet weak var imageCharacters: UIImageView!
     @IBOutlet weak var imageCreators: UIImageView!
     
-    @IBOutlet weak var labelComics: UILabel!
-    @IBOutlet weak var labelCharacters: UILabel!
-    @IBOutlet weak var labelCreators: UILabel!
+    @IBOutlet weak var labelComics: LTMorphingLabel!
+    @IBOutlet weak var labelCharacters: LTMorphingLabel!
+    @IBOutlet weak var labelCreators: LTMorphingLabel!
     
     private var idsOfObjectsToBeShown = [Int]()
     private var typeToBeShown: Type = .characters
@@ -29,7 +30,9 @@ class FavoritesViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.title = "Favorites"
-
+        labelComics.delegate = self
+        labelCharacters.delegate = self
+        labelCreators.delegate = self
         setupGestureRecognizer()
         setupLayout()
     }
@@ -63,27 +66,37 @@ class FavoritesViewController: UIViewController {
         imageCreators.layer.borderWidth = 0.5
         imageCreators.layer.borderColor = UIColor(white: 0.4, alpha: 1).cgColor
         
-        // labels
-        
-        let strokeTextAttributes: [NSAttributedString.Key : Any] = [NSAttributedString.Key.strokeColor : UIColor.darkGray,
-                                                                   NSAttributedString.Key.foregroundColor : UIColor.white,
-                                                                   NSAttributedString.Key.strokeWidth : -3.0,
-                                                                   NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 35)]
-        
+        // --- labels
+        //comics
         labelComics.snp.makeConstraints { make in
             make.center.equalTo(imageComics)
         }
-        labelComics.attributedText = NSMutableAttributedString(string: "Comics", attributes: strokeTextAttributes)
+        labelComics.text = "Zeitschriften"
+
+        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
+            self.labelComics.text = "Comics"
+        }
         
+        //character
         labelCharacters.snp.makeConstraints { make in
             make.center.equalTo(imageCharacters)
         }
-        labelCharacters.attributedText = NSMutableAttributedString(string: "Characters", attributes: strokeTextAttributes)
+        labelCharacters.text = "Figuren"
         
+        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
+            self.labelCharacters.text = "Characters"
+        }
+        
+        //creators
         labelCreators.snp.makeConstraints { make in
             make.center.equalTo(imageCreators)
         }
-        labelCreators.attributedText = NSMutableAttributedString(string: "Creators", attributes: strokeTextAttributes)
+        labelCreators.text = "Authoren"
+
+        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
+            self.labelCreators.text = "Creators"
+        }
+        
     }
     
     private func setupGestureRecognizer() {

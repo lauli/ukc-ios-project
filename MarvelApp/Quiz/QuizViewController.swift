@@ -23,7 +23,6 @@ class QuizViewController: UIViewController {
     
     @IBOutlet weak var currentScoreLabel: UILabel!
     @IBOutlet weak var highScoreLabel: UILabel!
-    @IBOutlet weak var questionLabel: UILabel!
     
     private let dataManager = DataManager.shared
     private var marvelObject: MarvelObject = MarvelObject(type: .characters, id: 0, name: "", thumbnail: "")
@@ -65,16 +64,10 @@ class QuizViewController: UIViewController {
         
         imageView.isHidden = hide
         buttonView.isHidden = hide
-        questionLabel.isHidden = hide
     }
     
     private func setupLayout() {
-        
-        let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
-        backgroundImage.image = UIImage(named: "quiz-background")
-        backgroundImage.contentMode = UIView.ContentMode.scaleAspectFill
-        self.view.insertSubview(backgroundImage, at: 0)
-        
+
         currentScoreLabel.snp.makeConstraints { make in
             make.top.equalTo(100)
             make.left.equalTo(view).offset(20)
@@ -91,9 +84,9 @@ class QuizViewController: UIViewController {
         
         imageView.snp.makeConstraints { make in
             make.top.equalTo(currentScoreLabel.snp.bottom).offset(20)
-            make.left.equalTo(view)
-            make.right.equalTo(view)
-            make.height.equalTo(view.bounds.height / 3 + 50)
+            make.left.equalTo(view).offset(20)
+            make.right.equalTo(view).inset(20)
+            make.height.equalTo(view.bounds.height / 2 - 30)
         }
         imageView.backgroundColor = .gray
         imageView.layer.masksToBounds = true
@@ -101,15 +94,8 @@ class QuizViewController: UIViewController {
         imageView.layer.borderWidth = 0.5
         imageView.layer.borderColor = UIColor(white: 0, alpha: 1).cgColor
         
-        questionLabel.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.bottom).offset(20)
-            make.left.equalTo(view).offset(20)
-            make.right.equalTo(view).inset(20)
-        }
-        questionLabel.textColor = .black
-        
         buttonView.snp.makeConstraints { make in
-            make.top.equalTo(questionLabel.snp.bottom).offset(20)
+            make.top.equalTo(imageView.snp.bottom).offset(20)
             make.left.equalTo(view).offset(20)
             make.right.equalTo(view).inset(20)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
@@ -143,10 +129,10 @@ class QuizViewController: UIViewController {
             }
         }
         button.layer.cornerRadius = 15
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.buttonBlue, for: .normal)
         button.backgroundColor = .clear
-        button.layer.borderWidth = 1.0
-        button.layer.borderColor = UIColor(white: 0, alpha: 1).cgColor
+        button.layer.borderWidth = 0.5
+        button.layer.borderColor = UIColor.buttonBlue.cgColor
         
         button.titleLabel?.lineBreakMode = .byWordWrapping
         button.titleLabel?.numberOfLines = 0
