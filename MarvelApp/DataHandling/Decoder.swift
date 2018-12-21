@@ -84,7 +84,6 @@ final class Decoder {
     // returns name of comic (String) and the decoded object with details (Comic)
     func comicDetails(fromJSON json: [String: Any], addToOldObject old: Comic) -> (String, Comic)? {
         guard let name = json["title"] as? String,
-            let description = json["description"] as? String?,
             let format = json["format"] as? String?,
             let pageCount = json["pageCount"] as? Int?,
             let issueNumber = json["issueNumber"] as? Double?,
@@ -94,11 +93,21 @@ final class Decoder {
                 return nil
         }
         
+        
+        let description: String
+        // no idea why, but sometimes it doesnt get the description even if its String?
+        // that's why I am sorting it out this way
+        if let d = json["description"] as? String {
+            description = d
+        } else {
+            description = ""
+        }
+        
         let (characterTotal, characters) = self.decodeDetailsToStringArray(fromList: characterList)
         let (creatorTotal, creators) = self.decodeDetailsToStringArray(fromList: creatorList)
         
         if old.name == name {
-            old.description = description?.utf8DecodedString()
+            old.description = description.utf8DecodedString()
             old.format = format
             old.issueNumber = Int(issueNumber ?? 0)
             old.pages = pageCount

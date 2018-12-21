@@ -8,5 +8,6 @@ use_frameworks!
 # Pods for MarvelApp
 pod 'SnapKit', '~> 4.0.0'
 pod 'ReachabilitySwift'
+pod 'BTNavigationDropdownMenu'
 
 end

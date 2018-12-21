@@ -6,17 +6,16 @@
 //  Copyright © 2018 Laureen Schausberger. All rights reserved.
 //
 
+import BTNavigationDropdownMenu
 import UIKit
 import SnapKit
 
 class SearchViewController: UIViewController, UISearchBarDelegate {
     
     @IBOutlet weak var searchBar: UISearchBar!
-    @IBOutlet weak var comicButton: UIButton!
-    @IBOutlet weak var characterButton: UIButton!
-    @IBOutlet weak var creatorButton: UIButton!
     @IBOutlet weak var collectionViewContainer: UIView!
     @IBOutlet weak var indicatorView: UIActivityIndicatorView!
+    @IBOutlet weak var backgroundView: UIImageView!
     
     private let dataManager = DataManager.shared
     private var collectionViewController: SearchCollectionViewController!
@@ -36,61 +35,52 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     
     private func setupLayout() {
         
-        //view.backgroundColor = UIColor(white: 0.77, alpha: 1)
+        view.backgroundColor = UIColor(white: 0.95, alpha: 1)
+        searchBar.barTintColor = UIColor(white: 0.95, alpha: 1)
+
+        backgroundView.snp.makeConstraints { make in
+            make.top.bottom.equalTo(view).offset(50)
+            make.left.right.equalTo(view).inset(50)
+        }
+        backgroundView.image = UIImage(named: "search-background")!
+        backgroundView.contentMode = .scaleAspectFit
+        backgroundView.alpha = 0.5
         
         collectionViewContainer.snp.makeConstraints { make in
-            make.top.equalTo(comicButton.snp.bottom).offset(10)
+            make.top.equalTo(searchBar.snp.bottom)
             make.left.right.bottom.equalTo(view)
         }
-        
-        comicButton.snp.makeConstraints { make in
-            make.top.equalTo(searchBar.snp.bottom).offset(10)
-            make.left.equalTo(view)
-            make.width.equalTo(view.bounds.width / 3)
-        }
-        comicButton.layer.borderColor = UIColor.buttonBlue.cgColor
-        comicButton.layer.borderWidth = 1
-        comicButton.layer.cornerRadius = 10
-        
-        characterButton.snp.makeConstraints { make in
-            make.top.equalTo(comicButton)
-            make.left.equalTo(comicButton.snp.right)
-            make.width.equalTo(comicButton)
-        }
-        characterButton.layer.borderColor = UIColor.buttonBlue.cgColor
-        characterButton.layer.borderWidth = 1
-        characterButton.layer.cornerRadius = 10
-        
-        creatorButton.snp.makeConstraints { make in
-            make.centerY.equalTo(characterButton)
-            make.left.equalTo(characterButton.snp.right)
-            make.width.equalTo(comicButton)
-        }
-        creatorButton.layer.borderColor = UIColor.buttonBlue.cgColor
-        creatorButton.layer.borderWidth = 1
-        creatorButton.layer.cornerRadius = 10
-        
-        changeLayoutForSelectedButtons(character: true)
+        collectionViewContainer.isHidden = true
+        addPickerView()
     }
     
-    private func changeLayoutForSelectedButtons(comic: Bool = false, character: Bool = false, creator: Bool = false) {
+    private func addPickerView() {
+        let items = ["Comic", "Character", "Creator"]
+        let menuView = BTNavigationDropdownMenu(navigationController: self.navigationController,
+                                                containerView: self.navigationController!.view,
+                                                title: BTTitle.title("Click to select filter"),
+                                                items: items)
         
-        comicButton.backgroundColor = comic ? UIColor.buttonBlue : .white
-        comicButton.setTitleColor(comic ? .white : UIColor.buttonBlue, for: .normal)
-        
-        characterButton.backgroundColor = character ? UIColor.buttonBlue : .white
-        characterButton.setTitleColor(character ? .white : UIColor.buttonBlue, for: .normal)
-        
-        creatorButton.backgroundColor = creator ? UIColor.buttonBlue : .white
-        creatorButton.setTitleColor(creator ? .white : UIColor.buttonBlue, for: .normal)
-        
-        if comic {
-            selectedType = .comics
-        } else if character {
-            selectedType = .characters
-        } else {
-            selectedType = .creators
+        menuView.didSelectItemAtIndexHandler = { (indexPath: Int) -> () in
+            switch indexPath {
+            case 0: // comics
+                self.selectedType = .comics
+            case 1: // characters
+                self.selectedType = .characters
+            default: // creators
+                self.selectedType = .creators
+            }
+            self.collectionViewController.objectsToShow = nil
+            self.collectionViewContainer.isHidden = true
         }
+        
+        menuView.arrowTintColor = .black
+        menuView.menuTitleColor = .buttonBlue
+        menuView.maskBackgroundOpacity = 0.2
+        menuView.cellSelectionColor = .buttonBlue
+        menuView.cellHeight = 100
+        
+        self.navigationItem.titleView = menuView
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -106,13 +96,14 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         collectionViewController.requestData(forType: selectedType, forName: nameToFind)
         
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            if self.collectionViewController.objectsToShow != nil || self.collectionViewController.nothingFound {
-                self.timer?.invalidate()
-                self.timer = nil
-                self.indicatorView.stopAnimating()
-                self.indicatorView.isHidden = true
+            if self.collectionViewController.objectsToShow != nil {
+                self.stopIndicatorAndTimer()
+                self.collectionViewContainer.isHidden = false
             }
+            
             if self.collectionViewController.nothingFound {
+                self.stopIndicatorAndTimer()
+                self.collectionViewContainer.isHidden = true
                 let ac = UIAlertController(title: "Nothing Found", message: "Please try another search request. (i.e. Spider-Man, Iron Man, Captain America, ...)", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "OK", style: .default))
                 self.present(ac, animated: true)
@@ -120,8 +111,19 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         }
     }
     
+    private func stopIndicatorAndTimer() {
+        self.timer?.invalidate()
+        self.timer = nil
+        self.indicatorView.stopAnimating()
+        self.indicatorView.isHidden = true
+    }
+    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        searchBarSearchButtonClicked(searchBar)
+        if searchBar.text != "" {
+            searchBarSearchButtonClicked(searchBar)
+        } else {
+            view.endEditing(true)
+        }
     }
     
     // MARK: - Navigation
@@ -131,22 +133,4 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
             self.collectionViewController = collectionViewController
         }
     }
-    
-    @IBAction func filterButtonTapped(_ sender: UIButton) {
-        switch sender.titleLabel?.text {
-        case "Comic":
-            selectedType = .comics
-            changeLayoutForSelectedButtons(comic: true)
-        case "Creator":
-            selectedType = .creators
-            changeLayoutForSelectedButtons(creator: true)
-        default:
-            selectedType = .characters
-            changeLayoutForSelectedButtons(character: true)
-        }
-        
-        collectionViewController.objectsToShow = nil
-    }
-    
-    
 }

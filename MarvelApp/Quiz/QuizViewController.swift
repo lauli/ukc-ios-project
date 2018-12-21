@@ -39,9 +39,11 @@ class QuizViewController: UIViewController {
             highScoreLabel.text = "High Score: \(highScore)"
             oldHighScore = highScore
         } else {
-            highScoreLabel.isHidden = true
+            highScoreLabel.text = "High Score: 0"
         }
         
+        currentScoreLabel.text = "Your Score: 0"
+
         setupLayout()
         loading(true)
         
@@ -74,18 +76,18 @@ class QuizViewController: UIViewController {
         self.view.insertSubview(backgroundImage, at: 0)
         
         currentScoreLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaInsets.bottom).offset(60)
-            make.left.equalTo(view.safeAreaInsets.bottom).offset(20)
+            make.top.equalTo(100)
+            make.left.equalTo(view).offset(20)
             make.right.equalTo(0)
         }
-        currentScoreLabel.textColor = .white
+        currentScoreLabel.textColor = .black
         
         highScoreLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaInsets.bottom).offset(60)
-            make.right.equalTo(view.safeAreaInsets.bottom).inset(20)
+            make.top.equalTo(100)
+            make.right.equalTo(view).inset(20)
             make.left.equalTo(0)
         }
-        highScoreLabel.textColor = .white
+        highScoreLabel.textColor = .black
         
         imageView.snp.makeConstraints { make in
             make.top.equalTo(currentScoreLabel.snp.bottom).offset(20)
@@ -94,14 +96,17 @@ class QuizViewController: UIViewController {
             make.height.equalTo(view.bounds.height / 3 + 50)
         }
         imageView.backgroundColor = .gray
-        imageView.layer.cornerRadius = 15
+        imageView.layer.masksToBounds = true
+        imageView.layer.cornerRadius = 25
+        imageView.layer.borderWidth = 0.5
+        imageView.layer.borderColor = UIColor(white: 0, alpha: 1).cgColor
         
         questionLabel.snp.makeConstraints { make in
             make.top.equalTo(imageView.snp.bottom).offset(20)
             make.left.equalTo(view).offset(20)
             make.right.equalTo(view).inset(20)
         }
-        questionLabel.textColor = .white
+        questionLabel.textColor = .black
         
         buttonView.snp.makeConstraints { make in
             make.top.equalTo(questionLabel.snp.bottom).offset(20)
@@ -138,10 +143,10 @@ class QuizViewController: UIViewController {
             }
         }
         button.layer.cornerRadius = 15
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .clear
         button.layer.borderWidth = 1.0
-        button.layer.borderColor = UIColor(white: 1.0, alpha: 0.7).cgColor
+        button.layer.borderColor = UIColor(white: 0, alpha: 1).cgColor
         
         button.titleLabel?.lineBreakMode = .byWordWrapping
         button.titleLabel?.numberOfLines = 0
@@ -189,8 +194,6 @@ class QuizViewController: UIViewController {
         currentScoreLabel.text = "Your Score: \(score)"
         if oldHighScore <= score {
             UserDefaults.standard.set(score, forKey: "highscore")
-            currentScoreLabel.text = "High Score: \(score)"
-            highScoreLabel.isHidden = false
         }
     }
     
@@ -199,8 +202,11 @@ class QuizViewController: UIViewController {
         
         if oldHighScore > score {
             message = "\nYou missed the highscore by \(oldHighScore-score). Better luck next time."
+        } else if oldHighScore == score {
+            message = "\nUff, so close - but yet so far. Better luck next time."
         } else {
             message = "\nBut congratulations - you beat the highscore by \(score-oldHighScore)! \nWohoooooo!"
+            highScoreLabel.text = "High Score: \(score)"
         }
         let alertController = UIAlertController(title: "Game Over",
                                                 message: "Ups, seems like this was wrong ;) The correct answer was \(marvelObject.name). \(message)",
@@ -214,7 +220,7 @@ class QuizViewController: UIViewController {
         self.present(alertController, animated: true, completion: nil)
         
         score = 0
-        currentScoreLabel.text = "Your Score:"
+        currentScoreLabel.text = "Your Score: 0"
     }
     
     

@@ -36,38 +36,54 @@ class FavoritesViewController: UIViewController {
     
     private func setupLayout() {
         
+        // images
+        
         let heightForImages = (contentView.bounds.size.height + 90)/3
         
         imageComics.snp.makeConstraints { make in
             make.left.right.top.equalTo(contentView)
             make.height.equalTo(heightForImages)
         }
+        imageComics.layer.borderWidth = 0.5
+        imageComics.layer.borderColor = UIColor(white: 0.4, alpha: 1).cgColor
 
         imageCharacters.snp.makeConstraints { make in
             make.left.right.equalTo(contentView)
             make.top.equalTo(imageComics.snp.bottom).offset(2)
             make.height.equalTo(heightForImages)
         }
+        imageCharacters.layer.borderWidth = 0.5
+        imageCharacters.layer.borderColor = UIColor(white: 0.4, alpha: 1).cgColor
 
         imageCreators.snp.makeConstraints { make in
             make.left.right.equalTo(contentView)
             make.top.equalTo(imageCharacters.snp.bottom).offset(2)
             make.height.equalTo(heightForImages)
         }
+        imageCreators.layer.borderWidth = 0.5
+        imageCreators.layer.borderColor = UIColor(white: 0.4, alpha: 1).cgColor
         
-        imageComics.alpha = 0.75
-        imageCharacters.alpha = 0.75
-        imageCreators.alpha = 0.75
+        // labels
+        
+        let strokeTextAttributes: [NSAttributedString.Key : Any] = [NSAttributedString.Key.strokeColor : UIColor.darkGray,
+                                                                   NSAttributedString.Key.foregroundColor : UIColor.white,
+                                                                   NSAttributedString.Key.strokeWidth : -3.0,
+                                                                   NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 35)]
         
         labelComics.snp.makeConstraints { make in
             make.center.equalTo(imageComics)
         }
+        labelComics.attributedText = NSMutableAttributedString(string: "Comics", attributes: strokeTextAttributes)
+        
         labelCharacters.snp.makeConstraints { make in
             make.center.equalTo(imageCharacters)
         }
+        labelCharacters.attributedText = NSMutableAttributedString(string: "Characters", attributes: strokeTextAttributes)
+        
         labelCreators.snp.makeConstraints { make in
             make.center.equalTo(imageCreators)
         }
+        labelCreators.attributedText = NSMutableAttributedString(string: "Creators", attributes: strokeTextAttributes)
     }
     
     private func setupGestureRecognizer() {

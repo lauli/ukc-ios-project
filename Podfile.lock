@@ -1,20 +1,24 @@
 PODS:
+  - BTNavigationDropdownMenu (0.5)
   - ReachabilitySwift (4.3.0)
   - SnapKit (4.0.1)
 
 DEPENDENCIES:
+  - BTNavigationDropdownMenu
   - ReachabilitySwift
   - SnapKit (~> 4.0.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - BTNavigationDropdownMenu
     - ReachabilitySwift
     - SnapKit
 
 SPEC CHECKSUMS:
+  BTNavigationDropdownMenu: ba3a26fdb6a56c4721c31df8a0875106c259663a
   ReachabilitySwift: 408477d1b6ed9779dba301953171e017c31241f3
   SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
 
-PODFILE CHECKSUM: 1833b3eddf7ee53ca4fcc4b21fe3a4c1782a4274
+PODFILE CHECKSUM: 59431121aff2bacef32a7cf9871580d29cc1ab80
 
 COCOAPODS: 1.5.3
