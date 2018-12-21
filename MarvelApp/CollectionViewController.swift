@@ -80,8 +80,8 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = UIScreen.main.bounds.width * 0.47
-        let height = UIScreen.main.bounds.height * 0.33
+        let width = UIScreen.main.bounds.width * 0.95
+        let height = UIScreen.main.bounds.height * 0.40
         return CGSize(width: width, height: height)
     }
     

@@ -9,10 +9,8 @@
 import UIKit
 import SnapKit
 
-class MarvelCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSourcePrefetching {
-    
-    private let dataManager = DataManager.shared
-    
+class MarvelCollectionViewController: CollectionViewController, UICollectionViewDataSourcePrefetching {
+
     private var reuseIdentifier = "Cell"
     
     var marvelType: Type = .characters
@@ -24,11 +22,6 @@ class MarvelCollectionViewController: UICollectionViewController, UICollectionVi
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.prefetchDataSource = self
-        
-        collectionView.snp.makeConstraints { make in
-            make.top.bottom.equalTo(view)
-            make.left.right.equalTo(view).inset(5)
-        }
         
         requestData()
     }
@@ -58,30 +51,7 @@ class MarvelCollectionViewController: UICollectionViewController, UICollectionVi
         }
     }
     
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let detailsViewController = segue.destination as? DetailViewController,
-            let cell = sender as? CollectionViewCell else {
-                return
-        }
-        
-        guard let marvelObject = cell.marvelObject, let indexPath = collectionView.indexPath(for: cell) else {
-            return
-        }
-        
-        detailsViewController.marvelObject = marvelObject
-        detailsViewController.preDownloadedImage = cell.imageView?.image
-        detailsViewController.requestDetails(atIndex: indexPath.row)
-    }
-    
     // MARK: - UICollectionViewDataSource
-    
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataManager.totalAmountInDB[marvelType.rawValue] ?? 20
@@ -106,16 +76,6 @@ class MarvelCollectionViewController: UICollectionViewController, UICollectionVi
             }
         }
         return cell
-    }
-    
-    // MARK: - Cell Layout
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = UIScreen.main.bounds.width * 0.47
-        let height = UIScreen.main.bounds.height * 0.33
-        return CGSize(width: width, height: height)
     }
     
 }
