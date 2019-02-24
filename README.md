@@ -45,18 +45,18 @@ The Marvel Tab has a segment with three sections, that controls `comics`, `chara
 
 ![](images/app-marvel.png)
 
-When clicking on one of the cells, the detailsview will show any further details stored in the Marvel API. This example shows the details of "Captain America": 
+When clicking on one of the cells, the DetailView will show any further details stored in the Marvel API. This example shows the details of "Captain America": 
 
 ![](images/app-detailview.png)
 
-Furthermore, if the user wants is currently in the Detailview of a `comic`, and wants to see its `creatos`, the app will open another Collectionview and then the Detailview of the respective creators. The process can be seen in the next picture. 
+Furthermore, if the user is currently in the DetailView of a `comic`, and  more information about its `creatos`, the user can do so by clicking `Show all` which will open another Collectionview of all involved creators. Then the he/she can user the cells like any other, meaning that they can open a Detailview of the respective creators. Described process (Comic DetailView -> CollectionView of Creators that were involved in the creating the comic -> Creator DetailView)can be seen in the next picture. 
 Originally it was planned to develop this feature for `characters` and `creators` too, but **unfortunately, because of API restrictions it was not possible**.
 
 ![](images/app-detail-comic.png)
 
 ### Search
 
-The Search Tab allows the user to search for a keyword by categories (comics`, `characters` and `comics`). 
+The Search Tab allows the user to search for a keyword by categories (`comics`, `characters` and `comics`). 
 
 ![](images/app-search.png)
 
