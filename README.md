@@ -33,9 +33,36 @@ The app consists of 4 tabs
 
 ![](images/app-overview.png)
 
-When clicking on one of the characters, the detailsview will show any further details stored in the Marvel API: 
+### Favs Tab
+
+As shown in the picture below, the Fav Tab consists of three different sections, that contain the stored `comics`, `characters` and `comics`. The picture also shows the delete functionality and that the user is shown an alert message when he/she wants to see a category that doesn't have any stored values.
+
+![](images/app-favs.png)
+
+### Marvel Tab
+
+The Marvel Tab has a segment with three sections, that controls `comics`, `characters` and `comics` container. 
+
+![](images/app-marvel.png)
+
+When clicking on one of the cells, the detailsview will show any further details stored in the Marvel API. This example shows the details of "Captain America": 
 
 ![](images/app-detailview.png)
+
+Furthermore, if the user wants is currently in the Detailview of a `comic`, and wants to see its `creatos`, the app will open another Collectionview and then the Detailview of the respective creators. The process can be seen in the next picture. 
+Originally it was planned to develop this feature for `characters` and `creators` too, but **unfortunately, because of API restrictions it was not possible**.
+
+![](images/app-detail-comic.png)
+
+### Search
+
+The Search Tab allows the user to search for a keyword by categories (comics`, `characters` and `comics`). 
+
+![](images/app-search.png)
+
+### Quiz
+
+The last tab, the Quiz Tab, allows the user to test his/her knowledge of the MCU characters. The app will randomly display a character, and its and 3 other names. The user has to pick the correct one. If so, the user gets 100 points and the game continues. When the user's answer is not correct, the user gets told which one would have been the right one, and the games ends.
 
 ## 📐 Report
 You can find a detailed description of the project and its outcome in `report.pdf`.
